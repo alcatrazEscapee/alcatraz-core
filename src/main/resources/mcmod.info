@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "alcatrazcore",
+    "name": "AlcatrazCore",
+    "description": "Core Library for AlcatrazEscapee's mods",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "AlcatrazEscapee"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
