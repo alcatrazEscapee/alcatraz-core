@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.util;
+package com.alcatrazescapee.alcatrazcore.util;
 
 import java.util.Map;
 

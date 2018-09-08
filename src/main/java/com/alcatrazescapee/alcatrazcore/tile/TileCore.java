@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.tile;
+package com.alcatrazescapee.alcatrazcore.tile;
 
 import net.minecraft.tileentity.TileEntity;
 

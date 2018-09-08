@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.block;
+package com.alcatrazescapee.alcatrazcore.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import alcatrazcore.client.IModelProvider;
+import com.alcatrazescapee.alcatrazcore.client.IModelProvider;
 
 public class BlockFluidCore extends BlockFluidClassic implements IModelProvider
 {

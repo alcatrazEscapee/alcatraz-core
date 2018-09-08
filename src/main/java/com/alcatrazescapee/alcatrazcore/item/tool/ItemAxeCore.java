@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.item.tool;
+package com.alcatrazescapee.alcatrazcore.item.tool;
 
 import net.minecraft.block.material.Material;
 

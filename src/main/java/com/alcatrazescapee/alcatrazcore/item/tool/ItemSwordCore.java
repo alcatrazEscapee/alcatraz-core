@@ -4,21 +4,21 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.item;
+package com.alcatrazescapee.alcatrazcore.item.tool;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemSword;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import alcatrazcore.client.IModelProvider;
+import com.alcatrazescapee.alcatrazcore.client.IModelProvider;
 
-public class ItemCore extends Item implements IModelProvider
+public class ItemSwordCore extends ItemSword implements IModelProvider
 {
-    public ItemCore()
+    public ItemSwordCore(ToolMaterial material)
     {
-
+        super(material);
     }
 
     @SideOnly(Side.CLIENT)
@@ -28,4 +28,5 @@ public class ItemCore extends Item implements IModelProvider
     {
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName().toString()));
     }
+
 }

@@ -4,8 +4,9 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.item.tool;
+package com.alcatrazescapee.alcatrazcore.item.tool;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -19,13 +20,13 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import alcatrazcore.client.IModelProvider;
+import com.alcatrazescapee.alcatrazcore.client.IModelProvider;
 
 @ParametersAreNonnullByDefault
 public class ItemToolCore extends ItemTool implements IModelProvider
 {
     protected final int harvestLevel;
-    protected Set<Material> effectiveMaterials;
+    protected Set<Material> effectiveMaterials = new HashSet<>();
 
     public ItemToolCore(ToolMaterial material)
     {

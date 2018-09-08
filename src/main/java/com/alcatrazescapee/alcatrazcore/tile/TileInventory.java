@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.tile;
+package com.alcatrazescapee.alcatrazcore.tile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-import alcatrazcore.util.CoreHelpers;
+import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
 
 @ParametersAreNonnullByDefault
 public class TileInventory extends TileCore

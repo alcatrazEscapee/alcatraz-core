@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore;
+package com.alcatrazescapee.alcatrazcore;
 
 import org.apache.logging.log4j.Logger;
 import net.minecraftforge.fml.common.Mod;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import alcatrazcore.util.OreDictionaryHelper;
+import com.alcatrazescapee.alcatrazcore.util.OreDictionaryHelper;
 
 @Mod(modid = AlcatrazCore.MOD_ID, version = AlcatrazCore.VERSION, dependencies = AlcatrazCore.DEPENDENCIES, useMetadata = true)
 public class AlcatrazCore
@@ -20,9 +20,11 @@ public class AlcatrazCore
     public static final String MOD_ID = "alcatrazcore";
     public static final String MOD_NAME = "Alcatraz Core";
     public static final String VERSION = "GRADLE:VERSION";
+
     private static final String FORGE_VERSION = "GRADLE:FORGE_VERSION";
     private static final String FORGE_VERSION_MAX = "15.0.0.0";
     private static final String FORGE_REQUIRED = "required-after:forge@[" + FORGE_VERSION + "," + FORGE_VERSION_MAX + ");";
+
     public static final String DEPENDENCIES = FORGE_REQUIRED;
 
     @Mod.Instance
@@ -54,6 +56,6 @@ public class AlcatrazCore
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-    }
 
+    }
 }

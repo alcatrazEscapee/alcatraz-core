@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.inventory;
+package com.alcatrazescapee.alcatrazcore.inventory;
 
 import javax.annotation.Nonnull;
 
@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemStackHandler;
 
-import alcatrazcore.tile.TileInventory;
+import com.alcatrazescapee.alcatrazcore.tile.TileInventory;
 
 public class ItemHandlerWrapper extends ItemStackHandler
 {

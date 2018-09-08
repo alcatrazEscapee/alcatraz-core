@@ -4,30 +4,28 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.block;
+package com.alcatrazescapee.alcatrazcore.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import alcatrazcore.client.IModelProvider;
+import com.alcatrazescapee.alcatrazcore.client.IModelProvider;
 
-public class BlockCore extends Block implements IModelProvider
+public class ItemCore extends Item implements IModelProvider
 {
-    public BlockCore(Material material)
+    public ItemCore()
     {
-        super(material);
+
     }
 
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("ConstantConditions")
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void registerModel()
     {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(this.getRegistryName(), "normal"));
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName().toString()));
     }
 }

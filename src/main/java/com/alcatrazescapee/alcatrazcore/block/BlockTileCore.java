@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.block;
+package com.alcatrazescapee.alcatrazcore.block;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -18,8 +18,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import alcatrazcore.tile.TileCore;
-import alcatrazcore.util.CoreHelpers;
+import com.alcatrazescapee.alcatrazcore.tile.TileCore;
+import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
 
 @ParametersAreNonnullByDefault
 public abstract class BlockTileCore extends BlockCore implements ITileEntityProvider

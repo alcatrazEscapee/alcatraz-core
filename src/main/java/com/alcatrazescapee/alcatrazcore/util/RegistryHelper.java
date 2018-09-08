@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.util;
+package com.alcatrazescapee.alcatrazcore.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,8 +31,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import alcatrazcore.block.BlockFluidCore;
-import alcatrazcore.client.IModelProvider;
+import com.alcatrazescapee.alcatrazcore.block.BlockFluidCore;
+import com.alcatrazescapee.alcatrazcore.client.IModelProvider;
 
 @ParametersAreNonnullByDefault
 @SuppressWarnings({"WeakerAccess", "UnusedReturnValue", "unused"})

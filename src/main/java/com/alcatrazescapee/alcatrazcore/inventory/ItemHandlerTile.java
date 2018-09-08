@@ -4,13 +4,13 @@
  * See the project LICENSE.md for more information.
  */
 
-package alcatrazcore.inventory;
+package com.alcatrazescapee.alcatrazcore.inventory;
 
 import javax.annotation.Nonnull;
 
 import net.minecraftforge.items.ItemStackHandler;
 
-import alcatrazcore.tile.TileInventory;
+import com.alcatrazescapee.alcatrazcore.tile.TileInventory;
 
 public class ItemHandlerTile extends ItemStackHandler
 {
