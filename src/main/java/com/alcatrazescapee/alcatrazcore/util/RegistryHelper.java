@@ -126,6 +126,22 @@ public class RegistryHelper
         return registerFluid(fluid, name, material, BlockFluidCore::new);
     }
 
+    public <T extends Fluid> T registerFluid(T fluid, String name, Material material, @Nullable BiFunction<T, Material, BlockFluidBase> fluidBlockSupplier)
+    {
+        fluid.setUnlocalizedName(modID + "." + name.toLowerCase().replace('/', '.'));
+        FluidRegistry.registerFluid(fluid);
+        if (fluidBlockSupplier != null)
+        {
+            BlockFluidBase fluidBlock = fluidBlockSupplier.apply(fluid, material);
+            if (fluidBlock != null)
+            {
+                registerBlock(fluidBlock, null, "fluid/" + fluid.getName());
+            }
+        }
+
+        return fluid;
+    }
+
     // Sounds
     public <T extends SoundEvent> T registerSound(T sound, String name)
     {
@@ -141,22 +157,6 @@ public class RegistryHelper
         sound.setRegistryName(loc);
         SOUNDS.add(sound);
         return sound;
-    }
-
-    public <T extends Fluid> T registerFluid(T fluid, String name, Material material, @Nullable BiFunction<T, Material, BlockFluidBase> fluidBlockSupplier)
-    {
-        fluid.setUnlocalizedName(modID + "." + name.toLowerCase().replace('/', '.'));
-        FluidRegistry.registerFluid(fluid);
-        if (fluidBlockSupplier != null)
-        {
-            BlockFluidBase fluidBlock = fluidBlockSupplier.apply(fluid, material);
-            if (fluidBlock != null)
-            {
-                registerBlock(fluidBlock, null, "fluid/" + fluid.getName());
-            }
-        }
-
-        return fluid;
     }
 
     // Blocks
