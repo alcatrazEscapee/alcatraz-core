@@ -34,6 +34,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import com.alcatrazescapee.alcatrazcore.block.BlockFluidCore;
 import com.alcatrazescapee.alcatrazcore.client.IModelProvider;
 
+
 @ParametersAreNonnullByDefault
 @SuppressWarnings({"WeakerAccess", "UnusedReturnValue", "unused"})
 public class RegistryHelper
@@ -130,6 +131,7 @@ public class RegistryHelper
     {
         fluid.setUnlocalizedName(modID + "." + name.toLowerCase().replace('/', '.'));
         FluidRegistry.registerFluid(fluid);
+        FluidRegistry.addBucketForFluid(fluid);
         if (fluidBlockSupplier != null)
         {
             BlockFluidBase fluidBlock = fluidBlockSupplier.apply(fluid, material);
@@ -145,14 +147,14 @@ public class RegistryHelper
     // Sounds
     public <T extends SoundEvent> T registerSound(T sound, String name)
     {
-        sound.setRegistryName(new ResourceLocation(modID, name));
+        sound.setRegistryName(new ResourceLocation(modID, name.toLowerCase()));
         SOUNDS.add(sound);
         return sound;
     }
 
     public SoundEvent registerSound(String name)
     {
-        ResourceLocation loc = new ResourceLocation(modID, name);
+        ResourceLocation loc = new ResourceLocation(modID, name.toLowerCase());
         SoundEvent sound = new SoundEvent(loc);
         sound.setRegistryName(loc);
         SOUNDS.add(sound);
@@ -178,16 +180,16 @@ public class RegistryHelper
 
     public <T extends Block> T registerBlock(T block, @Nullable Function<Block, ItemBlock> itemBlockSupplier, String name)
     {
-        block.setRegistryName(modID + ":" + name);
-        block.setTranslationKey(modID + ":" + name.replace('/', '.'));
+        block.setRegistryName(modID + ":" + name.toLowerCase());
+        block.setTranslationKey(modID + ":" + name.toLowerCase().replace('/', '.'));
         BLOCKS.add(block);
         if (itemBlockSupplier != null)
         {
             ItemBlock itemBlock = itemBlockSupplier.apply(block);
             if (itemBlock != null)
             {
-                itemBlock.setRegistryName(modID + ":" + name);
-                itemBlock.setTranslationKey(modID + ":" + name.replace('/', '.'));
+                itemBlock.setRegistryName(modID + ":" + name.toLowerCase());
+                itemBlock.setTranslationKey(modID + ":" + name.toLowerCase().replace('/', '.'));
                 ITEMS.add(itemBlock);
             }
         }

@@ -7,6 +7,7 @@
 package com.alcatrazescapee.alcatrazcore.util;
 
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Converter;
@@ -16,9 +17,12 @@ import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
-@SuppressWarnings("unused")
+import static com.alcatrazescapee.alcatrazcore.AlcatrazCore.MOD_ID;
+
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class OreDictionaryHelper
 {
     private static final Multimap<Element, String> MAP = LinkedListMultimap.create();
@@ -28,10 +32,40 @@ public class OreDictionaryHelper
 
     public static void init()
     {
-        for (Map.Entry<Element, String> entry : MAP.entries())
-            OreDictionary.registerOre(entry.getValue(), entry.getKey().toStack());
-        MAP.clear();
-        pastInit = true;
+        if (!pastInit)
+        {
+            for (Map.Entry<Element, String> entry : MAP.entries())
+                OreDictionary.registerOre(entry.getValue(), entry.getKey().toStack());
+            MAP.clear();
+            pastInit = true;
+        }
+    }
+
+    @Nonnull
+    public static ItemStack getStackForName(String name)
+    {
+        return getStackForName(name, MOD_ID);
+    }
+
+    @Nonnull
+    public static ItemStack getStackForName(String name, String preferredModID)
+    {
+        if (OreDictionary.doesOreNameExist(name))
+        {
+            NonNullList<ItemStack> stacks = OreDictionary.getOres(name);
+            if (!stacks.isEmpty())
+            {
+                if (stacks.size() == 1)
+                    return stacks.get(0);
+
+                //noinspection ConstantConditions
+                return stacks.stream()
+                        .filter(x -> x.getItem().getRegistryName().getNamespace().equals(preferredModID))
+                        .findFirst()
+                        .orElse(stacks.get(0));
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     public static void register(Block element, Object... parts)
