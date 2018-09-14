@@ -6,7 +6,7 @@
 
 package com.alcatrazescapee.alcatrazcore.util.collections;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,11 +20,11 @@ import com.google.common.collect.Tables;
 
 @ParametersAreNonnullByDefault
 @SuppressWarnings("SuspiciousMethodCalls")
-public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> implements Table<R, C, V>
+public class ImmutableHashTable<R, C, V> implements Table<R, C, V>
 {
-    private final EnumMap<R, EnumMap<C, V>> TABLE;
+    private final Map<R, Map<C, V>> TABLE;
 
-    private ImmutableEnumTable(EnumMap<R, EnumMap<C, V>> table)
+    private ImmutableHashTable(Map<R, Map<C, V>> table)
     {
         this.TABLE = table;
     }
@@ -33,7 +33,7 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
     public boolean contains(@Nullable Object rowKey, @Nullable Object columnKey)
     {
         if (rowKey == null || columnKey == null) return false;
-        EnumMap<C, V> map = TABLE.get(rowKey);
+        Map<C, V> map = TABLE.get(rowKey);
         if (map == null) return false;
         return map.containsKey(columnKey);
     }
@@ -61,7 +61,7 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
     public V get(@Nullable Object rowKey, @Nullable Object columnKey)
     {
         if (rowKey == null || columnKey == null) return null;
-        EnumMap<C, V> map = TABLE.get(rowKey);
+        Map<C, V> map = TABLE.get(rowKey);
         return map == null ? null : map.get(columnKey);
     }
 
@@ -75,7 +75,7 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
     public int size()
     {
         if (TABLE.isEmpty()) return 0;
-        return TABLE.values().stream().mapToInt(EnumMap::size).sum();
+        return TABLE.values().stream().mapToInt(Map::size).sum();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
     @Override
     public ImmutableMap<C, V> row(R rowKey)
     {
-        EnumMap map = TABLE.get(rowKey);
+        Map map = TABLE.get(rowKey);
         return map == null ? ImmutableMap.of() : ImmutableMap.copyOf(TABLE.get(rowKey));
     }
 
@@ -175,24 +175,22 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
         return b.build();
     }
 
-    public static class Builder<R extends Enum<R>, C extends Enum<C>, V>
+    public static class Builder<R, C, V>
     {
-        private final EnumMap<R, EnumMap<C, V>> TABLE;
-        private final Class<C> columnClass;
+        private final Map<R, Map<C, V>> TABLE;
 
-        public Builder(Class<R> rowClass, Class<C> columnClass)
+        public Builder()
         {
-            this.columnClass = columnClass;
-            TABLE = new EnumMap<>(rowClass);
+            TABLE = new HashMap<>();
         }
 
         @Nullable
         public V put(R rowKey, C columnKey, V value)
         {
-            EnumMap<C, V> map = TABLE.get(rowKey);
+            Map<C, V> map = TABLE.get(rowKey);
             if (map == null)
             {
-                map = new EnumMap<>(columnClass);
+                map = new HashMap<>();
                 map.put(columnKey, value);
                 TABLE.put(rowKey, map);
                 return null;
@@ -210,9 +208,9 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
             table.rowMap().forEach((r, x) -> x.forEach((c, v) -> put(r, c, v)));
         }
 
-        public ImmutableEnumTable<R, C, V> build()
+        public ImmutableHashTable<R, C, V> build()
         {
-            return new ImmutableEnumTable<>(TABLE);
+            return new ImmutableHashTable<>(TABLE);
         }
     }
 }

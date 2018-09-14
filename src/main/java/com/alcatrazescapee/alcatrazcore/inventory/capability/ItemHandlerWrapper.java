@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package com.alcatrazescapee.alcatrazcore.inventory;
+package com.alcatrazescapee.alcatrazcore.inventory.capability;
 
 import javax.annotation.Nonnull;
 

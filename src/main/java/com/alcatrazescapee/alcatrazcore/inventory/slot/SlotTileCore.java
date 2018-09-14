@@ -4,7 +4,7 @@
  * See the project LICENSE.md for more information.
  */
 
-package com.alcatrazescapee.alcatrazcore.inventory;
+package com.alcatrazescapee.alcatrazcore.inventory.slot;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +16,6 @@ import com.alcatrazescapee.alcatrazcore.tile.TileInventory;
 
 public class SlotTileCore extends SlotItemHandler
 {
-
     protected final TileInventory te;
 
     public SlotTileCore(@Nonnull IItemHandler inventory, int idx, int x, int y, @Nonnull TileInventory te)

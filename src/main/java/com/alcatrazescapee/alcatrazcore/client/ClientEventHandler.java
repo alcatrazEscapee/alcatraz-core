@@ -23,7 +23,7 @@ import com.alcatrazescapee.alcatrazcore.CoreConfig;
 import static net.minecraft.util.text.TextFormatting.AQUA;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
-@Mod.EventBusSubscriber(modid = AlcatrazCore.MOD_ID)
+@Mod.EventBusSubscriber(modid = AlcatrazCore.MOD_ID, value = Side.CLIENT)
 public class ClientEventHandler
 {
     @SubscribeEvent
