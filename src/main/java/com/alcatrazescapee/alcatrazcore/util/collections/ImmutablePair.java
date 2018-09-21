@@ -47,4 +47,12 @@ public class ImmutablePair<K, V> implements Map.Entry<K, V>
     {
         return value.hashCode() + 65536 * key.hashCode();
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof ImmutablePair)) return false;
+        ImmutablePair other = (ImmutablePair) obj;
+        return this.key.equals(other.key) && this.value.equals(other.value);
+    }
 }

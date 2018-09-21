@@ -15,9 +15,11 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -136,6 +138,31 @@ public class CoreHelpers
         return player.isCreative() ? stack : consumeItem(stack, amount);
     }
 
+    public static boolean doStacksMatch(ItemStack stack1, ItemStack stack2)
+    {
+        if (stack1.isEmpty())
+            return stack2.isEmpty();
+        if (stack2.isEmpty())
+            return false;
+        if (stack1.getItem() != stack2.getItem())
+            return false;
+        if (stack1.getMetadata() == OreDictionary.WILDCARD_VALUE || stack2.getMetadata() == OreDictionary.WILDCARD_VALUE)
+            return true;
+        return stack1.getMetadata() == stack2.getMetadata();
+    }
+
+    /**
+     * Merges two item stacks.
+     */
+    public static void mergeStacks(ItemStack stack, ItemStack stackToMerge)
+    {
+        if (doStacksMatch(stack, stackToMerge))
+        {
+            int amountToAdd = Math.min(stack.getMaxStackSize() - stack.getCount(), stackToMerge.getCount());
+            stack.grow(amountToAdd);
+        }
+    }
+
     /**
      * @param stack An item stack
      * @param name An ore dictionary name
@@ -192,16 +219,16 @@ public class CoreHelpers
         return !stacks.isEmpty();
     }
 
-    public static ItemStack getStackForName(String name)
+    public static ItemStack getStackForOre(String ore)
     {
-        return getStackForName(name, MOD_ID);
+        return getStackForOre(ore, MOD_ID);
     }
 
-    public static ItemStack getStackForName(String name, String preferredModID)
+    public static ItemStack getStackForOre(String ore, String preferredModID)
     {
-        if (OreDictionary.doesOreNameExist(name))
+        if (OreDictionary.doesOreNameExist(ore))
         {
-            NonNullList<ItemStack> stacks = OreDictionary.getOres(name);
+            NonNullList<ItemStack> stacks = OreDictionary.getOres(ore, false);
             if (!stacks.isEmpty())
             {
                 if (stacks.size() == 1)
@@ -215,6 +242,23 @@ public class CoreHelpers
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    public static ItemStack getStackForName(String name)
+    {
+        return getStackForName(name, 1, 0);
+    }
+
+    public static ItemStack getStackForName(String name, int count)
+    {
+        return getStackForName(name, count, 0);
+    }
+
+    public static ItemStack getStackForName(String name, int count, int meta)
+    {
+        Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
+
+        return item != null ? new ItemStack(item, count, meta) : ItemStack.EMPTY;
     }
 
     /**

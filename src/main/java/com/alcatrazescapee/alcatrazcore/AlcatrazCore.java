@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.alcatrazescapee.alcatrazcore.util.OreDictionaryHelper;
+import com.alcatrazescapee.alcatrazcore.util.compat.FireRegistry;
+import com.alcatrazescapee.alcatrazcore.util.compat.WrenchRegistry;
 
 @Mod(modid = AlcatrazCore.MOD_ID, version = AlcatrazCore.VERSION, dependencies = AlcatrazCore.DEPENDENCIES, useMetadata = true)
 public class AlcatrazCore
@@ -56,6 +58,7 @@ public class AlcatrazCore
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-
+        FireRegistry.init();
+        WrenchRegistry.init();
     }
 }

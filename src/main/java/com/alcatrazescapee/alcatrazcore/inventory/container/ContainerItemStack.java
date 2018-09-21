@@ -24,14 +24,19 @@ public abstract class ContainerItemStack extends Container
     protected final EntityPlayer player;
     protected int itemIndex;
 
-    public ContainerItemStack(InventoryPlayer playerInv, ItemStack stack)
+    /**
+     * A container for items that have an inventory when opened
+     *
+     * @param itemIndexOffset The size of the inventory (used to prevent moving the item that is in use)
+     */
+    public ContainerItemStack(InventoryPlayer playerInv, ItemStack stack, int itemIndexOffset)
     {
         super();
         this.player = playerInv.player;
         this.stack = stack;
 
         if (stack == player.getHeldItemMainhand())
-            this.itemIndex = playerInv.currentItem + 27; // Mainhand opened inventory
+            this.itemIndex = playerInv.currentItem + 27 + itemIndexOffset; // Mainhand opened inventory
         else
             this.itemIndex = -100; // Offhand, so ignore this rule
 
