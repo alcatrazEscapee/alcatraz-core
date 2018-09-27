@@ -19,7 +19,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -27,8 +26,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.oredict.OreDictionary;
 
 import mcp.MethodsReturnNonnullByDefault;
-
-import static com.alcatrazescapee.alcatrazcore.AlcatrazCore.MOD_ID;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -138,6 +135,9 @@ public class CoreHelpers
         return player.isCreative() ? stack : consumeItem(stack, amount);
     }
 
+    /**
+     * @return true if the stacks have the same item and metadata, or if one has a wildcard metadata
+     */
     public static boolean doStacksMatch(ItemStack stack1, ItemStack stack2)
     {
         if (stack1.isEmpty())
@@ -152,15 +152,37 @@ public class CoreHelpers
     }
 
     /**
-     * Merges two item stacks.
+     * @return true if the stacks have the same item and metadata
      */
-    public static void mergeStacks(ItemStack stack, ItemStack stackToMerge)
+    public static boolean doStacksMatchIgnoreWildcard(ItemStack stack1, ItemStack stack2)
     {
-        if (doStacksMatch(stack, stackToMerge))
-        {
-            int amountToAdd = Math.min(stack.getMaxStackSize() - stack.getCount(), stackToMerge.getCount());
-            stack.grow(amountToAdd);
-        }
+        if (stack1.isEmpty())
+            return stack2.isEmpty();
+        return stack1.isItemEqual(stack2);
+    }
+
+    /**
+     * @return true if the stacks have the same item and metadata, or if one has a wildcard metadata, and they have the same NBT
+     */
+    public static boolean doStacksMatchUseNBT(ItemStack stack1, ItemStack stack2)
+    {
+        return doStacksMatch(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
+    public static boolean canMergeStacks(ItemStack stack1, ItemStack stack2)
+    {
+        return doStacksMatchIgnoreWildcard(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
+    /**
+     * Merges the second stack into the first stack
+     * Make sure to call canMergeStacks before assuming that this will check
+     */
+    public static ItemStack mergeStacks(ItemStack stack, ItemStack stackToMerge)
+    {
+        int amountToAdd = Math.min(stack.getMaxStackSize() - stack.getCount(), stackToMerge.getCount());
+        stack.grow(amountToAdd);
+        return stack;
     }
 
     /**
@@ -176,6 +198,20 @@ public class CoreHelpers
         {
             String oreName = OreDictionary.getOreName(id);
             if (name.equals(oreName))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean doesStackMatchOre(ItemStack stack, int id)
+    {
+        if (stack.isEmpty()) return false;
+        int[] ids = OreDictionary.getOreIDs(stack);
+        for (int i : ids)
+        {
+            if (id == i)
             {
                 return true;
             }
@@ -206,8 +242,6 @@ public class CoreHelpers
         return false;
     }
 
-    // This both checks if an ore dictionary entry exists, and it it has at least one itemstack
-
     /**
      * @param ore An ore dictionary entry
      * @return true if the entry exists, and it has at least one stack associated to it
@@ -215,15 +249,33 @@ public class CoreHelpers
     public static boolean doesOreHaveStack(String ore)
     {
         if (!OreDictionary.doesOreNameExist(ore)) return false;
-        NonNullList<ItemStack> stacks = OreDictionary.getOres(ore);
+        NonNullList<ItemStack> stacks = OreDictionary.getOres(ore, false);
         return !stacks.isEmpty();
     }
 
+    /**
+     * @param ore An ore dictionary entry
+     * @return The first stack associated to that ore. Used for @link RecipeIngredient
+     */
     public static ItemStack getStackForOre(String ore)
     {
-        return getStackForOre(ore, MOD_ID);
+        if (OreDictionary.doesOreNameExist(ore))
+        {
+            NonNullList<ItemStack> stacks = OreDictionary.getOres(ore, false);
+            if (!stacks.isEmpty())
+            {
+                return stacks.get(0);
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
+    /**
+     * Used to get an ore stack with a preferred mod ID. Used for dynamic recipe output
+     *
+     * @param ore            The ore name
+     * @param preferredModID The mod ID to prefer. If an item with this mod ID is not found, it will default to the first entry
+     */
     public static ItemStack getStackForOre(String ore, String preferredModID)
     {
         if (OreDictionary.doesOreNameExist(ore))
@@ -232,8 +284,9 @@ public class CoreHelpers
             if (!stacks.isEmpty())
             {
                 if (stacks.size() == 1)
+                {
                     return stacks.get(0);
-
+                }
                 //noinspection ConstantConditions
                 return stacks.stream()
                         .filter(x -> x.getItem().getRegistryName().getNamespace().equals(preferredModID))
@@ -244,21 +297,34 @@ public class CoreHelpers
         return ItemStack.EMPTY;
     }
 
-    public static ItemStack getStackForName(String name)
+    public static String getOreName(ItemStack stack)
     {
-        return getStackForName(name, 1, 0);
+        int id = getOreID(stack);
+        if (id >= 0)
+        {
+            return OreDictionary.getOreName(id);
+        }
+        return "";
     }
 
-    public static ItemStack getStackForName(String name, int count)
+    public static int getOreID(ItemStack stack)
     {
-        return getStackForName(name, count, 0);
+        int[] ids = OreDictionary.getOreIDs(stack);
+        if (ids.length >= 1)
+        {
+            return ids[0];
+        }
+        return -1;
     }
 
-    public static ItemStack getStackForName(String name, int count, int meta)
+    public static ItemStack getStackByRegistryName(String name, int amount, int meta)
     {
-        Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
-
-        return item != null ? new ItemStack(item, count, meta) : ItemStack.EMPTY;
+        Item item = Item.getByNameOrId(name);
+        if (item == null)
+        {
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(item, amount, meta);
     }
 
     /**

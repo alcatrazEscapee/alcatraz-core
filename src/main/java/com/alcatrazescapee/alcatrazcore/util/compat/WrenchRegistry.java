@@ -35,7 +35,7 @@ public class WrenchRegistry
         if (Loader.isModLoaded("primalalchemy"))
         {
             AlcatrazCore.getLog().info("Adding wrenches from Primal Alchemy");
-            wrenches.add(CoreHelpers.getStackForName("primalalchemy:alchemy_wrench", 1, OreDictionary.WILDCARD_VALUE));
+            wrenches.add(CoreHelpers.getStackByRegistryName("primalalchemy:alchemy_wrench", 1, OreDictionary.WILDCARD_VALUE));
         }
         // todo: more wrenches!
 

@@ -11,15 +11,21 @@ import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.alcatrazescapee.alcatrazcore.tile.ITileFields;
 import com.alcatrazescapee.alcatrazcore.tile.TileInventory;
 
 public abstract class ContainerTileInventory<T extends TileInventory> extends Container
 {
     protected final T tile;
     protected final InventoryPlayer playerInv;
+
+    private int[] cachedFields;
 
     public ContainerTileInventory(InventoryPlayer playerInv, T tile)
     {
@@ -30,6 +36,56 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
         addPlayerInventorySlots(playerInv);
     }
 
+    @Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+
+        if (tile instanceof ITileFields)
+        {
+            ITileFields tileFields = (ITileFields) tile;
+            boolean allFieldsHaveChanged = false;
+            boolean fieldHasChanged[] = new boolean[tileFields.getFieldCount()];
+
+            if (cachedFields == null)
+            {
+                cachedFields = new int[tileFields.getFieldCount()];
+                allFieldsHaveChanged = true;
+            }
+
+            for (int i = 0; i < cachedFields.length; ++i)
+            {
+                if (allFieldsHaveChanged || cachedFields[i] != tileFields.getField(i))
+                {
+                    cachedFields[i] = tileFields.getField(i);
+                    fieldHasChanged[i] = true;
+                }
+            }
+
+            // go through the list of listeners (players using this container) and update them if necessary
+            for (IContainerListener listener : this.listeners)
+            {
+                for (int fieldID = 0; fieldID < tileFields.getFieldCount(); ++fieldID)
+                {
+                    if (fieldHasChanged[fieldID])
+                    {
+                        // Note that although sendWindowProperty takes 2 ints on a server these are truncated to shorts
+                        listener.sendWindowProperty(this, fieldID, cachedFields[fieldID]);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean canInteractWith(@Nonnull EntityPlayer player)
+    {
+        return true;
+    }
+
+    /**
+     * @return EMPTY if nothing changed, otherwise return the original stack (a copy of)
+     */
     @Override
     @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer player, int index)
@@ -52,14 +108,19 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
             }
             tile.setAndUpdateSlots(index);
         }
-        // Transfer into the container
         else
         {
-            if (!this.mergeItemStack(stack, 0, containerSlots, false))
+            // Transfer into the container
+            for (int i = 0; i < containerSlots; i++)
             {
-                return ItemStack.EMPTY;
+                if (inventorySlots.get(i).isItemValid(stack))
+                {
+                    if (this.mergeItemStack(stack, i, i + 1, false))
+                    {
+                        tile.setAndUpdateSlots(i);
+                    }
+                }
             }
-            tile.setAndUpdateSlots(0);
         }
 
         // Required
@@ -79,10 +140,16 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
         return stackCopy;
     }
 
+    // Called when a progress bar update is received from the server. The two values (id and data) are the same two
+    // values given to sendWindowProperty.  In this case we are using fields so we just pass them to the tileEntity.
+    @SideOnly(Side.CLIENT)
     @Override
-    public boolean canInteractWith(@Nonnull EntityPlayer player)
+    public void updateProgressBar(int id, int data)
     {
-        return true;
+        if (tile instanceof ITileFields)
+        {
+            ((ITileFields) tile).setField(id, data);
+        }
     }
 
     protected abstract void addContainerSlots();
