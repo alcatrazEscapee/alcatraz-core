@@ -23,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import mcp.MethodsReturnNonnullByDefault;
@@ -325,6 +326,20 @@ public class CoreHelpers
             return ItemStack.EMPTY;
         }
         return new ItemStack(item, amount, meta);
+    }
+
+    public static boolean doStacksMatch(@Nullable FluidStack stack1, @Nullable FluidStack stack2)
+    {
+        if (stack1 == null)
+            return stack2 == null;
+        if (stack2 == null)
+            return false;
+        return stack1.getFluid() == stack2.getFluid();
+    }
+
+    public static boolean doStacksMatchUseNBT(@Nullable FluidStack stack1, @Nullable FluidStack stack2)
+    {
+        return stack1 != null ? stack1.isFluidEqual(stack2) : stack2 == null;
     }
 
     /**

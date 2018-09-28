@@ -4,54 +4,66 @@
  * See the project LICENSE.md for more information.
  */
 
-package com.alcatrazescapee.alcatrazcore.recipe;
+package com.alcatrazescapee.alcatrazcore.inventory.recipe;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
+import com.alcatrazescapee.alcatrazcore.inventory.ingredient.IRecipeIngredient;
 import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
 
+/**
+ * A basic implementation of {@link IRecipeCore} for single item stack -> item stack recipes
+ *
+ * @author AlcatrazEscapee
+ */
 @ParametersAreNonnullByDefault
-public abstract class RecipeCore implements IRecipeCore
+public class RecipeCore implements IRecipeCore
 {
+    private final IRecipeIngredient ingredient;
     private final ItemStack outputStack;
     private final int inputAmount;
 
-    private ItemStack inputStack = ItemStack.EMPTY;
-    private int inputOreID = -1;
-    private String inputOre = "";
-
     public RecipeCore(ItemStack outputStack, ItemStack inputStack)
     {
-        this.inputStack = inputStack;
         this.outputStack = outputStack;
         this.inputAmount = inputStack.isEmpty() ? 0 : inputStack.getCount();
+        this.ingredient = IRecipeIngredient.of(inputStack);
     }
 
     public RecipeCore(ItemStack outputStack, String inputOre, int inputAmount)
     {
         this.outputStack = outputStack;
-        this.inputOre = inputOre;
-        this.inputOreID = OreDictionary.getOreID(inputOre);
         this.inputAmount = inputAmount;
+        this.ingredient = IRecipeIngredient.of(inputOre, inputAmount);
     }
 
     @Override
-    public boolean isEqual(IRecipeCore recipe)
+    public boolean test(Object input)
     {
-        return isEqual((ItemStack) recipe.getOutput());
+        return ingredient.test(input);
     }
 
     @Override
-    public boolean isEqual(ItemStack stack)
+    public boolean test(Object... inputs)
     {
-        return inputOreID == -1 ? CoreHelpers.doStacksMatch(stack, inputStack) : CoreHelpers.doesStackMatchOre(stack, inputOreID);
+        throw new UnsupportedOperationException("This recipe does not support access by multiple inputs");
     }
 
     @Override
+    public boolean matches(Object input)
+    {
+        return input instanceof IRecipeIngredient && ingredient.matches((IRecipeIngredient) input);
+    }
+
+    @Override
+    public boolean matches(Object... inputs)
+    {
+        throw new UnsupportedOperationException("This recipe does not support access by multiple inputs");
+    }
+
     public ItemStack consumeInput(ItemStack stack)
     {
         return CoreHelpers.consumeItem(stack, inputAmount);
@@ -64,14 +76,14 @@ public abstract class RecipeCore implements IRecipeCore
     }
 
     @Override
-    public Object getInput()
+    public IRecipeIngredient getInput()
     {
-        return inputOreID == -1 ? inputStack : inputOre;
+        return ingredient;
     }
 
     @Override
     public String getName()
     {
-        return inputOreID == -1 ? inputStack.getDisplayName() : inputOre;
+        return ingredient.getName();
     }
 }
