@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class OreDictionaryHelper
+public final class OreDictionaryHelper
 {
     private static final Multimap<Element, String> MAP = LinkedListMultimap.create();
     private static final Converter<String, String> UPPER_UNDERSCORE_TO_LOWER_CAMEL = CaseFormat.UPPER_UNDERSCORE.converterTo(CaseFormat.LOWER_CAMEL);

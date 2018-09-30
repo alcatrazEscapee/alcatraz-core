@@ -8,7 +8,7 @@ package com.alcatrazescapee.alcatrazcore.tile;
 
 import net.minecraft.tileentity.TileEntity;
 
-public class TileCore extends TileEntity
+public abstract class TileCore extends TileEntity
 {
     public TileCore()
     {

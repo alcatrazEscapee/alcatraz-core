@@ -26,12 +26,13 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.alcatrazescapee.alcatrazcore.util.collections.ImmutablePair;
 import mcp.MethodsReturnNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class CoreHelpers
+public final class CoreHelpers
 {
     @Nullable
     @SuppressWarnings("unchecked")
@@ -111,6 +112,14 @@ public class CoreHelpers
         world.spawnEntity(new EntityItem(world, x, y, z, stack));
     }
 
+    public static void giveItemToPlayer(World world, EntityPlayer player, ItemStack stack)
+    {
+        if (!player.addItemStackToInventory(stack))
+        {
+            dropItemInWorldExact(world, player.getPosition(), stack);
+        }
+    }
+
     public static ItemStack consumeItem(ItemStack stack)
     {
         return consumeItem(stack, 1);
@@ -170,20 +179,57 @@ public class CoreHelpers
         return doStacksMatch(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
+    /**
+     * @return true if one or both of the stacks is empty, or if the stacks match (excluding wildcards)
+     */
     public static boolean canMergeStacks(ItemStack stack1, ItemStack stack2)
     {
-        return doStacksMatchIgnoreWildcard(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+        return stack1.isEmpty() || stack2.isEmpty() || doStacksMatchIgnoreWildcard(stack1, stack2);
     }
 
     /**
-     * Merges the second stack into the first stack
-     * Make sure to call canMergeStacks before assuming that this will check
+     * @return true if one or both of the stacks is empty, or if the stacks match (excluding wildcards), and the have the same NBT
      */
-    public static ItemStack mergeStacks(ItemStack stack, ItemStack stackToMerge)
+    public static boolean canMergeStacksUseNBT(ItemStack stack1, ItemStack stack2)
     {
-        int amountToAdd = Math.min(stack.getMaxStackSize() - stack.getCount(), stackToMerge.getCount());
-        stack.grow(amountToAdd);
-        return stack;
+        return stack1.isEmpty() || stack2.isEmpty() || doStacksMatchIgnoreWildcard(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
+    /**
+     * Merges stack2 into stack1
+     *
+     * @return the merged stack. Excess is ignored
+     */
+    public static ItemStack mergeStacks(ItemStack stack1, ItemStack stack2)
+    {
+        if (stack1.isEmpty())
+            return stack2;
+        if (stack2.isEmpty())
+            return stack1;
+        int amount = Math.min(stack1.getMaxStackSize(), stack1.getCount() + stack2.getCount());
+        stack1.setCount(amount);
+        return stack1;
+    }
+
+    /**
+     * Merges stack2 into stack1, accounting for excess
+     * @return A pair consisting of the merged stack (key), and the excess stack (value)
+     */
+    public static ImmutablePair<ItemStack, ItemStack> mergeStacksWithResult(ItemStack stack1, ItemStack stack2)
+    {
+        if (stack1.isEmpty())
+            return ImmutablePair.of(stack2, ItemStack.EMPTY);
+        if (stack2.isEmpty())
+            return ImmutablePair.of(stack1, ItemStack.EMPTY);
+
+        int amount = stack1.getCount() + stack2.getCount();
+        int maxAmount = stack1.getMaxStackSize();
+        stack1.setCount(Math.min(maxAmount, amount));
+        if (amount <= maxAmount)
+            return ImmutablePair.of(stack1, ItemStack.EMPTY);
+
+        stack2.setCount(amount - maxAmount);
+        return ImmutablePair.of(stack1, stack2);
     }
 
     /**

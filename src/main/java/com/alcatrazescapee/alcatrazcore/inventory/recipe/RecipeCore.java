@@ -20,11 +20,11 @@ import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
  * @author AlcatrazEscapee
  */
 @ParametersAreNonnullByDefault
-public class RecipeCore implements IRecipeCore
+public abstract class RecipeCore implements IRecipeCore
 {
-    private final IRecipeIngredient ingredient;
-    private final ItemStack outputStack;
-    private final int inputAmount;
+    protected final IRecipeIngredient ingredient;
+    protected final ItemStack outputStack;
+    protected final int inputAmount;
 
     public RecipeCore(ItemStack outputStack, ItemStack inputStack)
     {

@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 import com.alcatrazescapee.alcatrazcore.tile.TileCore;
 
-public class GuiContainerTileCore<T extends TileCore> extends GuiContainerCore
+public abstract class GuiContainerTileCore<T extends TileCore> extends GuiContainerCore
 {
     protected final T tile;
 

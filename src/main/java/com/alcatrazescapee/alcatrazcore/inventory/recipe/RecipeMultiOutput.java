@@ -19,11 +19,11 @@ import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
  * @author AlcatrazEscapee
  */
 @ParametersAreNonnullByDefault
-public class RecipeMultiOutput implements IRecipeCore
+public abstract class RecipeMultiOutput implements IRecipeCore
 {
-    private final IRecipeIngredient ingredient;
-    private final ItemStack[] outputStacks;
-    private final int inputAmount;
+    protected final IRecipeIngredient ingredient;
+    protected final ItemStack[] outputStacks;
+    protected final int inputAmount;
 
     public RecipeMultiOutput(ItemStack inputStack, ItemStack... outputStacks)
     {

@@ -7,6 +7,7 @@
 package com.alcatrazescapee.alcatrazcore.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -21,6 +22,11 @@ public class BlockCore extends Block implements IModelProvider
     public BlockCore(Material material)
     {
         super(material);
+    }
+
+    public BlockCore(Material material, MapColor mapColor)
+    {
+        super(material, mapColor);
     }
 
     @SideOnly(Side.CLIENT)

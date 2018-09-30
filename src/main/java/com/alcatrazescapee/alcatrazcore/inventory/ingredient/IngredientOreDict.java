@@ -52,8 +52,7 @@ public class IngredientOreDict implements IRecipeIngredient
     @Override
     public boolean test(Object obj)
     {
-        return obj instanceof ItemStack &&
-                CoreHelpers.doesStackMatchOre((ItemStack) obj, oreName) && ((ItemStack) obj).getCount() >= amount;
+        return obj instanceof ItemStack && CoreHelpers.doesStackMatchOre((ItemStack) obj, oreName) && ((ItemStack) obj).getCount() >= amount;
     }
 
     @Override

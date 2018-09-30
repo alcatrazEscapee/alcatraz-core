@@ -6,6 +6,12 @@
 
 package com.alcatrazescapee.alcatrazcore.tile;
 
+/**
+ * An interface that is implemented by a tile entity to send field information to clients
+ * Used in conjunction with {@link com.alcatrazescapee.alcatrazcore.inventory.container.ContainerTileInventory}
+ *
+ * @author AlcatrazEscapee
+ */
 public interface ITileFields
 {
     int getFieldCount();
@@ -13,5 +19,4 @@ public interface ITileFields
     int getField(int ID);
 
     void setField(int ID, int value);
-
 }

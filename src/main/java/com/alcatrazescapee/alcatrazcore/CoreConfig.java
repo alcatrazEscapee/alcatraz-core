@@ -11,7 +11,7 @@ import net.minecraftforge.common.config.Config;
 import static com.alcatrazescapee.alcatrazcore.AlcatrazCore.MOD_ID;
 
 @Config(modid = MOD_ID)
-public class CoreConfig
+public final class CoreConfig
 {
     @Config.LangKey("config." + MOD_ID + ".general")
     public static GeneralConfig GENERAL = new GeneralConfig();

@@ -37,7 +37,7 @@ import com.alcatrazescapee.alcatrazcore.client.IModelProvider;
 
 @ParametersAreNonnullByDefault
 @SuppressWarnings({"WeakerAccess", "UnusedReturnValue", "unused"})
-public class RegistryHelper
+public final class RegistryHelper
 {
     private static final Map<String, RegistryHelper> MAP = new HashMap<>();
 

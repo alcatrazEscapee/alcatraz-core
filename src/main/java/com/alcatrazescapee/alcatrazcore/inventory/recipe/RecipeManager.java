@@ -31,6 +31,7 @@ public class RecipeManager<T extends IRecipeCore> implements IRecipeManager<T>
         recipes = new ArrayList<>(size);
     }
 
+    @Override
     public void add(T recipe)
     {
         recipes.add(recipe);

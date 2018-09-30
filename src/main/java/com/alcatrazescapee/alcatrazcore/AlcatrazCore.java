@@ -17,9 +17,9 @@ import com.alcatrazescapee.alcatrazcore.util.compat.FireRegistry;
 import com.alcatrazescapee.alcatrazcore.util.compat.WrenchRegistry;
 
 @Mod(modid = AlcatrazCore.MOD_ID, version = AlcatrazCore.VERSION, dependencies = AlcatrazCore.DEPENDENCIES, useMetadata = true)
-public class AlcatrazCore
+public final class AlcatrazCore
 {
-    public static final String MOD_ID = "alcatrazcore";
+    public static final String MOD_ID = "alccore";
     public static final String MOD_NAME = "Alcatraz Core";
     public static final String VERSION = "GRADLE:VERSION";
 

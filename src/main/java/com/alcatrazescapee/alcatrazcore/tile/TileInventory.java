@@ -22,7 +22,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
 
 @ParametersAreNonnullByDefault
-public class TileInventory extends TileCore
+public abstract class TileInventory extends TileCore
 {
     protected final ItemStackHandler inventory;
 
