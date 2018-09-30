@@ -19,15 +19,9 @@ import com.alcatrazescapee.alcatrazcore.util.compat.WrenchRegistry;
 @Mod(modid = AlcatrazCore.MOD_ID, version = AlcatrazCore.VERSION, dependencies = AlcatrazCore.DEPENDENCIES, useMetadata = true)
 public final class AlcatrazCore
 {
-    public static final String MOD_ID = "alccore";
-    public static final String MOD_NAME = "Alcatraz Core";
+    public static final String MOD_ID = "alcatrazcore";
     public static final String VERSION = "GRADLE:VERSION";
-
-    private static final String FORGE_VERSION = "GRADLE:FORGE_VERSION";
-    private static final String FORGE_VERSION_MAX = "15.0.0.0";
-    private static final String FORGE_REQUIRED = "required-after:forge@[" + FORGE_VERSION + "," + FORGE_VERSION_MAX + ");";
-
-    public static final String DEPENDENCIES = FORGE_REQUIRED;
+    public static final String DEPENDENCIES = "required-after:forge@[GRADLE:FORGE_VERSION,15.0.0.0);";
 
     @Mod.Instance
     private static AlcatrazCore instance;

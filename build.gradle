@@ -22,7 +22,9 @@ compileJava {
 minecraft {
     version = "${mc_version}-${forge_version}"
     runDir = "run"
-    mappings = "snapshot_20180813"
+
+    mappings = "snapshot_${mcp_mappings}"
+    //makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     replace 'GRADLE:VERSION', "${mod_version}"
     replace 'GRADLE:FORGE_VERSION', "${forge_version}"

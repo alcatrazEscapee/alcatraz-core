@@ -18,6 +18,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -53,21 +54,17 @@ public final class CoreHelpers
     public static BlockPos getTopSolidBlock(World world, BlockPos pos)
     {
         Chunk chunk = world.getChunk(pos);
-        BlockPos blockpos;
-        BlockPos blockpos1;
-
-        for (blockpos = new BlockPos(pos.getX(), chunk.getTopFilledSegment() + 16, pos.getZ()); blockpos.getY() >= 0; blockpos = blockpos1)
+        BlockPos.MutableBlockPos mPos = new BlockPos.MutableBlockPos(pos.getX(), chunk.getTopFilledSegment() + 16, pos.getZ());
+        while (mPos.getY() > 0)
         {
-            blockpos1 = blockpos.down();
-            IBlockState state = chunk.getBlockState(blockpos1);
-
-            if (state.getMaterial().blocksMovement() && !state.getBlock().isLeaves(state, world, blockpos1) && !state.getBlock().isFoliage(world, blockpos1) && !state.getMaterial().isLiquid())
+            mPos.move(EnumFacing.DOWN, 1);
+            IBlockState state = chunk.getBlockState(mPos);
+            if (state.getMaterial().blocksMovement() && !state.getBlock().isLeaves(state, world, mPos) && !state.getBlock().isFoliage(world, mPos) && !state.getMaterial().isLiquid())
             {
                 break;
             }
         }
-
-        return blockpos;
+        return mPos.toImmutable();
     }
 
     /**
@@ -80,21 +77,17 @@ public final class CoreHelpers
     public static BlockPos getTopNonAirBlock(World world, BlockPos pos)
     {
         Chunk chunk = world.getChunk(pos);
-        BlockPos blockpos;
-        BlockPos blockpos1;
-
-        for (blockpos = new BlockPos(pos.getX(), chunk.getTopFilledSegment() + 16, pos.getZ()); blockpos.getY() >= 0; blockpos = blockpos1)
+        BlockPos.MutableBlockPos mPos = new BlockPos.MutableBlockPos(pos.getX(), chunk.getTopFilledSegment() + 16, pos.getZ());
+        while (mPos.getY() > 0)
         {
-            blockpos1 = blockpos.down();
-            IBlockState state = chunk.getBlockState(blockpos1);
-
+            mPos.move(EnumFacing.DOWN, 1);
+            IBlockState state = chunk.getBlockState(mPos);
             if (state.getBlock() != Blocks.AIR)
             {
                 break;
             }
         }
-
-        return blockpos;
+        return mPos.toImmutable();
     }
 
     public static void dropItemInWorld(World world, BlockPos pos, ItemStack stack)
