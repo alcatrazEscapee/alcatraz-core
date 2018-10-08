@@ -33,7 +33,7 @@ public class ClientEventHandler
         ItemStack stack = event.getItemStack();
         List<String> tt = event.getToolTip();
 
-        if (event.getFlags().isAdvanced() && CoreConfig.GENERAL.showDebugTooltips)
+        if (event.getFlags().isAdvanced() && CoreConfig.showDebugTooltips)
         {
             // Translation Key
             tt.add(AQUA + "Translation Key: " + GRAY + stack.getTranslationKey());
@@ -47,7 +47,7 @@ public class ClientEventHandler
 
             // Ore Dictionary Names
             int[] ids = OreDictionary.getOreIDs(stack);
-            if (ids != null && ids.length != 0)
+            if (ids.length != 0)
             {
                 tt.add(AQUA + "Ore Dictionary Names:");
                 Arrays.stream(ids).mapToObj(OreDictionary::getOreName).sorted().map(x -> GRAY + x).forEachOrdered(tt::add);

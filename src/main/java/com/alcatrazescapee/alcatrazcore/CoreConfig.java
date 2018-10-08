@@ -13,12 +13,6 @@ import static com.alcatrazescapee.alcatrazcore.AlcatrazCore.MOD_ID;
 @Config(modid = MOD_ID)
 public final class CoreConfig
 {
-    @Config.LangKey("config." + MOD_ID + ".general")
-    public static GeneralConfig GENERAL = new GeneralConfig();
-
-    public static class GeneralConfig
-    {
-        @Config.Comment({"When Advanced tooltips are enabled, show extra information about the item", "(Ore dictionary values, NBT data, registry + translation keys, etc.)"})
-        public boolean showDebugTooltips = true;
-    }
+    @Config.Comment({"When Advanced tooltips are enabled, show extra information about the item", "(Ore dictionary values, NBT data, registry + translation keys, etc.)"})
+    public static boolean showDebugTooltips = false;
 }
