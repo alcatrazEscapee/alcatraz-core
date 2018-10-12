@@ -10,6 +10,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -20,62 +21,11 @@ import com.google.common.collect.Tables;
 
 @ParametersAreNonnullByDefault
 @SuppressWarnings("SuspiciousMethodCalls")
-public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> implements Table<R, C, V>
+public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> extends EnumTable<R, C, V>
 {
-    private final EnumMap<R, EnumMap<C, V>> TABLE;
-
-    private ImmutableEnumTable(EnumMap<R, EnumMap<C, V>> table)
+    private ImmutableEnumTable(EnumMap<R, EnumMap<C, V>> table, Class<R> rowClass, Class<C> colClass)
     {
-        this.TABLE = table;
-    }
-
-    @Override
-    public boolean contains(@Nullable Object rowKey, @Nullable Object columnKey)
-    {
-        if (rowKey == null || columnKey == null) return false;
-        EnumMap<C, V> map = TABLE.get(rowKey);
-        if (map == null) return false;
-        return map.containsKey(columnKey);
-    }
-
-    @Override
-    public boolean containsRow(@Nullable Object rowKey)
-    {
-        return TABLE.containsKey(rowKey);
-    }
-
-    @Override
-    public boolean containsColumn(@Nullable Object columnKey)
-    {
-        return TABLE.values().stream().anyMatch(x -> x.containsKey(columnKey));
-    }
-
-    @Override
-    public boolean containsValue(@Nullable Object value)
-    {
-        if (value == null) return false;
-        return TABLE.values().stream().flatMap(x -> x.values().stream()).anyMatch(x -> x.equals(value));
-    }
-
-    @Override
-    public V get(@Nullable Object rowKey, @Nullable Object columnKey)
-    {
-        if (rowKey == null || columnKey == null) return null;
-        EnumMap<C, V> map = TABLE.get(rowKey);
-        return map == null ? null : map.get(columnKey);
-    }
-
-    @Override
-    public boolean isEmpty()
-    {
-        return TABLE.isEmpty();
-    }
-
-    @Override
-    public int size()
-    {
-        if (TABLE.isEmpty()) return 0;
-        return TABLE.values().stream().mapToInt(EnumMap::size).sum();
+        super(table, rowClass, colClass);
     }
 
     @Override
@@ -109,17 +59,19 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
     }
 
     @Override
+    @Nonnull
     public ImmutableMap<C, V> row(R rowKey)
     {
-        EnumMap map = TABLE.get(rowKey);
-        return map == null ? ImmutableMap.of() : ImmutableMap.copyOf(TABLE.get(rowKey));
+        EnumMap map = table.get(rowKey);
+        return map == null ? ImmutableMap.of() : ImmutableMap.copyOf(map);
     }
 
     @Override
+    @Nonnull
     public ImmutableMap<R, V> column(C columnKey)
     {
         ImmutableMap.Builder<R, V> b = ImmutableMap.builder();
-        TABLE.forEach((r, c) -> {
+        table.forEach((r, c) -> {
             V v = c.get(columnKey);
             if (v != null)
                 b.put(r, v);
@@ -130,7 +82,7 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
     @Override
     public ImmutableSet<Cell<R, C, V>> cellSet()
     {
-        return TABLE.entrySet()
+        return table.entrySet()
                 .stream()
                 .map(r ->
                         r.getValue()
@@ -145,25 +97,25 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
     @Override
     public ImmutableSet<R> rowKeySet()
     {
-        return ImmutableSet.copyOf(TABLE.keySet());
+        return ImmutableSet.copyOf(table.keySet());
     }
 
     @Override
     public ImmutableSet<C> columnKeySet()
     {
-        return ImmutableSet.copyOf(TABLE.values().stream().flatMap(x -> x.keySet().stream()).collect(ImmutableSet.toImmutableSet()));
+        return ImmutableSet.copyOf(table.values().stream().flatMap(x -> x.keySet().stream()).collect(ImmutableSet.toImmutableSet()));
     }
 
     @Override
     public ImmutableSet<V> values()
     {
-        return TABLE.values().stream().flatMap(x -> x.values().stream()).collect(ImmutableSet.toImmutableSet());
+        return table.values().stream().flatMap(x -> x.values().stream()).collect(ImmutableSet.toImmutableSet());
     }
 
     @Override
     public ImmutableMap<R, Map<C, V>> rowMap()
     {
-        return ImmutableMap.copyOf(TABLE);
+        return ImmutableMap.copyOf(table);
     }
 
     @Override
@@ -177,24 +129,26 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
 
     public static class Builder<R extends Enum<R>, C extends Enum<C>, V>
     {
-        private final EnumMap<R, EnumMap<C, V>> TABLE;
-        private final Class<C> columnClass;
+        private final EnumMap<R, EnumMap<C, V>> table;
+        private final Class<C> colClass;
+        private final Class<R> rowClass;
 
-        public Builder(Class<R> rowClass, Class<C> columnClass)
+        public Builder(Class<R> rowClass, Class<C> colClass)
         {
-            this.columnClass = columnClass;
-            TABLE = new EnumMap<>(rowClass);
+            this.colClass = colClass;
+            this.rowClass = rowClass;
+            table = new EnumMap<>(rowClass);
         }
 
         @Nullable
         public V put(R rowKey, C columnKey, V value)
         {
-            EnumMap<C, V> map = TABLE.get(rowKey);
+            EnumMap<C, V> map = table.get(rowKey);
             if (map == null)
             {
-                map = new EnumMap<>(columnClass);
+                map = new EnumMap<>(colClass);
                 map.put(columnKey, value);
-                TABLE.put(rowKey, map);
+                table.put(rowKey, map);
                 return null;
             }
             else
@@ -212,7 +166,7 @@ public class ImmutableEnumTable<R extends Enum<R>, C extends Enum<C>, V> impleme
 
         public ImmutableEnumTable<R, C, V> build()
         {
-            return new ImmutableEnumTable<>(TABLE);
+            return new ImmutableEnumTable<>(table, rowClass, colClass);
         }
     }
 }

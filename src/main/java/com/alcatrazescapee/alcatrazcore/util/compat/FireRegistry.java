@@ -37,7 +37,7 @@ public class FireRegistry
         if (Loader.isModLoaded("notreepunching"))
         {
             AlcatrazCore.getLog().info("Adding fire starters from No Tree Punching");
-            fireStarters.add(CoreHelpers.getStackByRegistryName("notreepunching:fire_starter", 1, OreDictionary.WILDCARD_VALUE));
+            fireStarters.add(CoreHelpers.getStackByRegistryName("notreepunching:fire_starter", OreDictionary.WILDCARD_VALUE));
         }
         // todo: more fire starter items!
 

@@ -295,7 +295,7 @@ public final class CoreHelpers
 
     /**
      * @param ore An ore dictionary entry
-     * @return The first stack associated to that ore. Used for @link RecipeIngredient
+     * @return The first stack associated to that ore.
      */
     public static ItemStack getStackForOre(String ore)
     {
@@ -355,6 +355,16 @@ public final class CoreHelpers
             return ids[0];
         }
         return -1;
+    }
+
+    public static ItemStack getStackByRegistryName(String name)
+    {
+        return getStackByRegistryName(name, 1, 0);
+    }
+
+    public static ItemStack getStackByRegistryName(String name, int meta)
+    {
+        return getStackByRegistryName(name, 1, meta);
     }
 
     public static ItemStack getStackByRegistryName(String name, int amount, int meta)
