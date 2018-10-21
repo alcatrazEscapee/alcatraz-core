@@ -29,11 +29,16 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
 
     public ContainerTileInventory(InventoryPlayer playerInv, T tile)
     {
+        this(playerInv, tile, 0, 0);
+    }
+
+    public ContainerTileInventory(InventoryPlayer playerInv, T tile, int playerSlotOffsetX, int playerSlotOffsetY)
+    {
         this.tile = tile;
         this.playerInv = playerInv;
 
         addContainerSlots();
-        addPlayerInventorySlots(playerInv);
+        addPlayerInventorySlots(playerInv, playerSlotOffsetX, playerSlotOffsetY);
     }
 
     @Override
@@ -154,20 +159,20 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
 
     protected abstract void addContainerSlots();
 
-    private void addPlayerInventorySlots(InventoryPlayer playerInv)
+    protected void addPlayerInventorySlots(InventoryPlayer playerInv, int offsetX, int offsetY)
     {
         // Add Player Inventory Slots
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, offsetX + 8 + j * 18, offsetY + 84 + i * 18));
             }
         }
 
         for (int k = 0; k < 9; k++)
         {
-            addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
+            addSlotToContainer(new Slot(playerInv, k, offsetX + 8 + k * 18, offsetY + 142));
         }
     }
 }

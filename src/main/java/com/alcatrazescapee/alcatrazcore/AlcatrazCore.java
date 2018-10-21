@@ -21,7 +21,7 @@ public final class AlcatrazCore
 {
     public static final String MOD_ID = "alcatrazcore";
     public static final String VERSION = "GRADLE:VERSION";
-    public static final String DEPENDENCIES = "required-after:forge@[GRADLE:FORGE_VERSION,15.0.0.0);";
+    public static final String DEPENDENCIES = "required-after:forge@[14.23.4.2705,15.0.0.0);";
 
     @Mod.Instance
     private static AlcatrazCore instance;
