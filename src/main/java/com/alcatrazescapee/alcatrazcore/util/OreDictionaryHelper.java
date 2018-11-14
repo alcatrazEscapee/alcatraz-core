@@ -21,9 +21,10 @@ import net.minecraftforge.oredict.OreDictionary;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public final class OreDictionaryHelper
 {
+    public static final Converter<String, String> UPPER_UNDERSCORE_TO_LOWER_CAMEL = CaseFormat.UPPER_UNDERSCORE.converterTo(CaseFormat.LOWER_CAMEL);
+    public static final Joiner JOINER_UNDERSCORE = Joiner.on('_').skipNulls();
+
     private static final Multimap<Element, String> MAP = LinkedListMultimap.create();
-    private static final Converter<String, String> UPPER_UNDERSCORE_TO_LOWER_CAMEL = CaseFormat.UPPER_UNDERSCORE.converterTo(CaseFormat.LOWER_CAMEL);
-    private static final Joiner JOINER_UNDERSCORE = Joiner.on('_').skipNulls();
     private static boolean pastInit = false;
 
     public static void init()

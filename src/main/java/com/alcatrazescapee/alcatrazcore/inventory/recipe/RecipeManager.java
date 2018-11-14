@@ -39,6 +39,7 @@ public class RecipeManager<T extends IRecipeCore> implements IRecipeManager<T>
 
     @Nullable
     @Override
+    @Deprecated
     public T get(Object... inputs)
     {
         return recipes.stream().filter(x -> x.test(inputs)).findFirst().orElse(null);
@@ -59,6 +60,7 @@ public class RecipeManager<T extends IRecipeCore> implements IRecipeManager<T>
     }
 
     @Override
+    @Deprecated
     public void remove(Object... inputs)
     {
         recipes.removeIf(x -> x.matches(inputs));

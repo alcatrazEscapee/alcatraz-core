@@ -46,6 +46,11 @@ public interface IRecipeIngredient extends Predicate<Object>
         return new IngredientFluidStack(stack);
     }
 
+    static IRecipeIngredient of(ItemStack stack, boolean useNBT)
+    {
+        return useNBT ? new IngredientItemStackNBT(stack) : of(stack);
+    }
+
     @Nonnull
     String getName();
 
@@ -59,6 +64,17 @@ public interface IRecipeIngredient extends Predicate<Object>
      */
     @Override
     boolean test(Object input);
+
+    /**
+     * Used to test wether an input object matches this ingredient, while ignoring the size / count
+     *
+     * @param input This is typically an item stack. The individual ingredient type will cast to the relavant type here.
+     * @since 1.0.2
+     */
+    default boolean testIgnoreCount(Object input)
+    {
+        return test(input);
+    }
 
     /**
      * Used to test whether another ingredient matches this one, for purpose of recipe removal

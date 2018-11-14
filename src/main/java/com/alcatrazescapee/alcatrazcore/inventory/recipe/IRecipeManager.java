@@ -30,12 +30,10 @@ public interface IRecipeManager<T extends IRecipeCore>
     List<T> getAll();
 
     /**
-     * Gets a recipe for the specified inputs. Only useful on recipes that have more than one input
-     *
-     * @param inputs A series of inputs. Can be IRecipeIngredients, FluidStacks, ItemStacks, etc.
-     * @return The first recipe that matches the inputs, null if no recipe matches
+     * Use get with a list type instead
      */
     @Nullable
+    @Deprecated
     T get(Object... inputs);
 
     /**
@@ -47,13 +45,15 @@ public interface IRecipeManager<T extends IRecipeCore>
     @Nullable
     T get(Object input);
 
+    @Deprecated
     void remove(Object... inputs);
 
     void remove(Object input);
 
+    @Deprecated
     default boolean isRecipe(Object... inputs)
     {
-        return get(inputs) != null;
+        return false;
     }
 
     default boolean isRecipe(Object input)

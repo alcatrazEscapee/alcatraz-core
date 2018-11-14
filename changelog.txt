@@ -1,0 +1,5 @@
+v1.0.3
+
+Changes
+ - Recipe / Ingredient tweaks to make them more sensible
+ - A bunch more stuff for an upcoming project

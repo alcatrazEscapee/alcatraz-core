@@ -7,6 +7,7 @@
 package com.alcatrazescapee.alcatrazcore.inventory.ingredient;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
@@ -23,6 +24,7 @@ public class IngredientOreDict implements IRecipeIngredient
 {
     private final String oreName;
     private final int amount;
+    private List<ItemStack> stacks;
 
     IngredientOreDict(@Nonnull String oreName)
     {
@@ -33,6 +35,7 @@ public class IngredientOreDict implements IRecipeIngredient
     {
         this.oreName = oreName;
         this.amount = amount;
+        this.stacks = null;
     }
 
     @Nonnull
@@ -46,13 +49,23 @@ public class IngredientOreDict implements IRecipeIngredient
     @Nonnull
     public List<ItemStack> getStacks()
     {
-        return OreDictionary.getOres(oreName, false);
+        if (stacks == null)
+        {
+            stacks = OreDictionary.getOres(oreName, false).stream().map(ItemStack::copy).peek(x -> x.setCount(amount)).collect(Collectors.toList());
+        }
+        return stacks;
     }
 
     @Override
     public boolean test(Object obj)
     {
-        return obj instanceof ItemStack && CoreHelpers.doesStackMatchOre((ItemStack) obj, oreName) && ((ItemStack) obj).getCount() >= amount;
+        return testIgnoreCount(obj) && ((ItemStack) obj).getCount() >= amount;
+    }
+
+    @Override
+    public boolean testIgnoreCount(Object obj)
+    {
+        return obj instanceof ItemStack && CoreHelpers.doesStackMatchOre((ItemStack) obj, oreName);
     }
 
     @Override

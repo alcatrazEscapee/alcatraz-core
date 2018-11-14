@@ -47,6 +47,7 @@ public abstract class RecipeCore implements IRecipeCore
     }
 
     @Override
+    @Deprecated
     public boolean test(Object... inputs)
     {
         throw new UnsupportedOperationException("This recipe does not support access by multiple inputs");
@@ -59,6 +60,7 @@ public abstract class RecipeCore implements IRecipeCore
     }
 
     @Override
+    @Deprecated
     public boolean matches(Object... inputs)
     {
         throw new UnsupportedOperationException("This recipe does not support access by multiple inputs");

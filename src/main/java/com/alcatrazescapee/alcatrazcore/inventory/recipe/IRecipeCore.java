@@ -26,11 +26,9 @@ public interface IRecipeCore extends Predicate<Object>
     boolean test(Object input);
 
     /**
-     * This is used to test a input object against the recipe
-     *
-     * @param inputs The inputs, in the case that there are multiple inputs
-     * @return if the input object matches the recipe inputs
+     *  Use {@link test} with a list or collection type instead
      */
+    @Deprecated
     boolean test(Object... inputs);
 
     /**
@@ -42,11 +40,9 @@ public interface IRecipeCore extends Predicate<Object>
     boolean matches(Object input);
 
     /**
-     * This is used to test a input object against the recipe
-     *
-     * @param inputs The input, in the case that there are multiple inputs
-     * @return if the input object matches the recipe inputs
+     * Use matches with a single output instead.
      */
+    @Deprecated
     boolean matches(Object... inputs);
 
     Object getOutput();

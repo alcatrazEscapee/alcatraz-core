@@ -16,7 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.alcatrazescapee.alcatrazcore.AlcatrazCore;
 import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
 
-public class WrenchRegistry
+public final class WrenchRegistry
 {
     private static List<ItemStack> wrenches;
 

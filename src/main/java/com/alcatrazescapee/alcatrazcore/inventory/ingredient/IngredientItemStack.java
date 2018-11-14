@@ -6,7 +6,7 @@
 
 package com.alcatrazescapee.alcatrazcore.inventory.ingredient;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 
@@ -21,15 +21,13 @@ import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
  */
 public class IngredientItemStack implements IRecipeIngredient
 {
-    private final ItemStack stack;
+    protected final ItemStack stack;
     private final List<ItemStack> stacks;
 
     IngredientItemStack(@Nonnull ItemStack stack)
     {
         this.stack = stack;
-
-        stacks = new ArrayList<>(1);
-        stacks.add(stack);
+        stacks = Collections.singletonList(stack);
     }
 
     @Nonnull
@@ -49,7 +47,13 @@ public class IngredientItemStack implements IRecipeIngredient
     @Override
     public boolean test(Object obj)
     {
-        return obj instanceof ItemStack && CoreHelpers.doStacksMatch(stack, (ItemStack) obj) && ((ItemStack) obj).getCount() >= stack.getCount();
+        return testIgnoreCount(obj) && ((ItemStack) obj).getCount() >= stack.getCount();
+    }
+
+    @Override
+    public boolean testIgnoreCount(Object obj)
+    {
+        return obj instanceof ItemStack && CoreHelpers.doStacksMatch(stack, (ItemStack) obj);
     }
 
     @Override

@@ -10,6 +10,9 @@
 *.iws
 *.iml
 
+# Private Stuff
+private.properties
+
 # Production
 /out/
 /run/

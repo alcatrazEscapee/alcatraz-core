@@ -53,7 +53,13 @@ public class IngredientFluidStack implements IRecipeIngredient
     @Override
     public boolean test(Object obj)
     {
-        return obj instanceof FluidStack && CoreHelpers.doStacksMatch(stack, (FluidStack) obj) && ((FluidStack) obj).amount >= stack.amount;
+        return testIgnoreCount(obj) && ((FluidStack) obj).amount >= stack.amount;
+    }
+
+    @Override
+    public boolean testIgnoreCount(Object obj)
+    {
+        return obj instanceof FluidStack && CoreHelpers.doStacksMatch(stack, (FluidStack) obj);
     }
 
     @Override

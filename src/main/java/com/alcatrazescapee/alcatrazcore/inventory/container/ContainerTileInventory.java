@@ -89,6 +89,9 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
     }
 
     /**
+     * Note: mergeItemStack() returns true if the stack was modified in any way
+     * If it returns false, then the stack was not changed.
+     *
      * @return EMPTY if nothing changed, otherwise return the original stack (a copy of)
      */
     @Override
@@ -131,6 +134,7 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
         // Required
         if (stack.getCount() == 0)
         {
+            // The stack in slot was consumed, so reset the slot
             slot.putStack(ItemStack.EMPTY);
         }
         else
