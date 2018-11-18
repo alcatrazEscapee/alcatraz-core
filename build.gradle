@@ -71,8 +71,6 @@ curseforge {
 
         addGameVersion("${mc_version}")
         relations {
-            requiredDependency("alcatrazcore")
-            optionalDependency("patchouli")
         }
 
         afterEvaluate {

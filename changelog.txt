@@ -1,5 +1,5 @@
-v1.0.3
+v1.0.2
 
 Changes
- - Recipe / Ingredient tweaks to make them more sensible
- - A bunch more stuff for an upcoming project
+ - Lots of base mod stuff for a new project
+ - Added a system to sync capabilities from server to client

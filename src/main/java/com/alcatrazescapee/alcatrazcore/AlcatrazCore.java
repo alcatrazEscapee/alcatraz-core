@@ -14,6 +14,11 @@ import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.alcatrazescapee.alcatrazcore.util.OreDictionaryHelper;
 import com.alcatrazescapee.alcatrazcore.util.compat.FireRegistry;
@@ -42,6 +47,8 @@ public final class AlcatrazCore
     @Mod.Instance
     private static AlcatrazCore instance;
     private static Logger log;
+    private static SimpleNetworkWrapper network;
+    private static int networkMessageID = 0;
     private static boolean isSignedBuild = true;
 
     public static AlcatrazCore getInstance()
@@ -54,12 +61,24 @@ public final class AlcatrazCore
         return log;
     }
 
+    public static SimpleNetworkWrapper getNetwork()
+    {
+        return network;
+    }
+
+    public static <R extends IMessage, C extends IMessage> void registerMessage(IMessageHandler<R, C> handler, Class<R> clazz, Side side)
+    {
+        network.registerMessage(handler, clazz, networkMessageID++, side);
+    }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         log = event.getModLog();
         if (!isSignedBuild)
             log.warn("You are not running an official build. This version will NOT be supported by the author.");
+
+        network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
     }
 
     @Mod.EventHandler
