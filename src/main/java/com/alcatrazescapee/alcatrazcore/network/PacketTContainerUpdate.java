@@ -134,11 +134,11 @@ public abstract class PacketTContainerUpdate<T, D> implements IMessage
         return !capabilityData.isEmpty();
     }
 
-    public abstract D readCapability(final T instance);
+    protected abstract D readCapability(final T instance);
 
-    public abstract void serializeCapability(final ByteBuf buf, final D data);
+    protected abstract void serializeCapability(final ByteBuf buf, final D data);
 
-    public abstract D deserializeCapability(final ByteBuf buf);
+    protected abstract D deserializeCapability(final ByteBuf buf);
 
     @ParametersAreNonnullByDefault
     public abstract static class Handler<T, D, M extends PacketTContainerUpdate<T, D>> implements IMessageHandler<M, IMessage>
@@ -171,20 +171,8 @@ public abstract class PacketTContainerUpdate<T, D> implements IMessage
 
                     if (cap != null)
                     {
-                        final ItemStack newStack = stack.copy();
-
-                        final T newCap = newStack.getCapability(message.capability, message.targetFace);
-                        if (newCap != null)
-                        {
-                            applyCapability(newCap, data);
-
-                            if (!cap.equals(newCap))
-                            {
-                                container.putStackInSlot(index, newStack);
-                            }
-                        }
+                        applyCapability(stack, cap, data);
                     }
-
                     return true;
                 });
             });
@@ -192,6 +180,6 @@ public abstract class PacketTContainerUpdate<T, D> implements IMessage
             return null;
         }
 
-        public abstract void applyCapability(T instance, D data);
+        public abstract void applyCapability(ItemStack stack, T instance, D data);
     }
 }

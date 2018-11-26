@@ -2,4 +2,4 @@ v1.0.2
 
 Changes
  - Lots of base mod stuff for a new project
- - Added a system to sync capabilities from server to client
+ - Added a system to sync capabilities from server to client for those that require it

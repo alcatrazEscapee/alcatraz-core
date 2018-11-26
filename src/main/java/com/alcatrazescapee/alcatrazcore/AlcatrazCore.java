@@ -46,30 +46,31 @@ public final class AlcatrazCore
 
     @Mod.Instance
     private static AlcatrazCore instance;
-    private static Logger log;
-    private static SimpleNetworkWrapper network;
-    private static int networkMessageID = 0;
-    private static boolean isSignedBuild = true;
+    public static Logger getLog()
+    {
+        return instance.log;
+    }
+
+    public static SimpleNetworkWrapper getNetwork()
+    {
+        return instance.network;
+    }
+
+    public static <R extends IMessage, C extends IMessage> void registerMessage(IMessageHandler<R, C> handler, Class<R> clazz, Side side)
+    {
+        instance.network.registerMessage(handler, clazz, instance.networkMessageID++, side);
+    }
+
+    private Logger log;
 
     public static AlcatrazCore getInstance()
     {
         return instance;
     }
 
-    public static Logger getLog()
-    {
-        return log;
-    }
-
-    public static SimpleNetworkWrapper getNetwork()
-    {
-        return network;
-    }
-
-    public static <R extends IMessage, C extends IMessage> void registerMessage(IMessageHandler<R, C> handler, Class<R> clazz, Side side)
-    {
-        network.registerMessage(handler, clazz, networkMessageID++, side);
-    }
+    private SimpleNetworkWrapper network;
+    private int networkMessageID = 0;
+    private boolean isSignedBuild = true;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)

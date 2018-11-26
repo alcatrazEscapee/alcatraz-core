@@ -24,6 +24,7 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
 {
     protected final T tile;
     protected final InventoryPlayer playerInv;
+    private final boolean shouldSendFields;
 
     private int[] cachedFields;
 
@@ -36,6 +37,7 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
     {
         this.tile = tile;
         this.playerInv = playerInv;
+        this.shouldSendFields = tile instanceof ITileFields;
 
         addContainerSlots();
         addPlayerInventorySlots(playerInv, playerSlotOffsetX, playerSlotOffsetY);
@@ -46,46 +48,10 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
     {
         super.detectAndSendChanges();
 
-        if (tile instanceof ITileFields)
+        if (shouldSendFields)
         {
-            ITileFields tileFields = (ITileFields) tile;
-            boolean allFieldsHaveChanged = false;
-            boolean fieldHasChanged[] = new boolean[tileFields.getFieldCount()];
-
-            if (cachedFields == null)
-            {
-                cachedFields = new int[tileFields.getFieldCount()];
-                allFieldsHaveChanged = true;
-            }
-
-            for (int i = 0; i < cachedFields.length; ++i)
-            {
-                if (allFieldsHaveChanged || cachedFields[i] != tileFields.getField(i))
-                {
-                    cachedFields[i] = tileFields.getField(i);
-                    fieldHasChanged[i] = true;
-                }
-            }
-
-            // go through the list of listeners (players using this container) and update them if necessary
-            for (IContainerListener listener : this.listeners)
-            {
-                for (int fieldID = 0; fieldID < tileFields.getFieldCount(); ++fieldID)
-                {
-                    if (fieldHasChanged[fieldID])
-                    {
-                        // Note that although sendWindowProperty takes 2 ints on a server these are truncated to shorts
-                        listener.sendWindowProperty(this, fieldID, cachedFields[fieldID]);
-                    }
-                }
-            }
+            detectAndSendFieldChanges();
         }
-    }
-
-    @Override
-    public boolean canInteractWith(@Nonnull EntityPlayer player)
-    {
-        return true;
     }
 
     /**
@@ -99,18 +65,18 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
     public ItemStack transferStackInSlot(EntityPlayer player, int index)
     {
         // Slot that was clicked
-        Slot slot = inventorySlots.get(index);
+        final Slot slot = inventorySlots.get(index);
         if (slot == null || !slot.getHasStack())
             return ItemStack.EMPTY;
 
-        ItemStack stack = slot.getStack();
-        ItemStack stackCopy = stack.copy();
-        int containerSlots = inventorySlots.size() - player.inventory.mainInventory.size(); // number of slots in the container
+        final ItemStack stack = slot.getStack();
+        final ItemStack stackCopy = stack.copy();
+        final int containerSlots = inventorySlots.size() - player.inventory.mainInventory.size(); // number of slots in the container
 
         if (index < containerSlots)
         {
             // Transfer out of the container
-            if (!this.mergeItemStack(stack, containerSlots, inventorySlots.size(), true))
+            if (!mergeItemStack(stack, containerSlots, inventorySlots.size(), true))
             {
                 return ItemStack.EMPTY;
             }
@@ -123,7 +89,7 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
             {
                 if (inventorySlots.get(i).isItemValid(stack))
                 {
-                    if (this.mergeItemStack(stack, i, i + 1, false))
+                    if (mergeItemStack(stack, i, i + 1, false))
                     {
                         tile.setAndUpdateSlots(i);
                     }
@@ -155,9 +121,70 @@ public abstract class ContainerTileInventory<T extends TileInventory> extends Co
     @Override
     public void updateProgressBar(int id, int data)
     {
-        if (tile instanceof ITileFields)
+        if (shouldSendFields)
         {
             ((ITileFields) tile).setField(id, data);
+        }
+    }
+
+    @Override
+    public boolean canInteractWith(@Nonnull EntityPlayer player)
+    {
+        return true;
+    }
+
+    protected void detectAndSendFieldChanges()
+    {
+        ITileFields tileFields = (ITileFields) tile;
+        boolean allFieldsHaveChanged = false;
+        final boolean fieldHasChanged[] = new boolean[tileFields.getFieldCount()];
+
+        if (cachedFields == null)
+        {
+            cachedFields = new int[tileFields.getFieldCount()];
+            allFieldsHaveChanged = true;
+        }
+
+        for (int i = 0; i < cachedFields.length; ++i)
+        {
+            if (allFieldsHaveChanged || cachedFields[i] != tileFields.getField(i))
+            {
+                cachedFields[i] = tileFields.getField(i);
+                fieldHasChanged[i] = true;
+            }
+        }
+
+        // go through the list of listeners (players using this container) and update them if necessary
+        for (IContainerListener listener : this.listeners)
+        {
+            for (int fieldID = 0; fieldID < tileFields.getFieldCount(); ++fieldID)
+            {
+                if (fieldHasChanged[fieldID])
+                {
+                    // Note that although sendWindowProperty takes 2 ints on a server these are truncated to shorts
+                    listener.sendWindowProperty(this, fieldID, cachedFields[fieldID]);
+                }
+            }
+        }
+    }
+
+    protected void detectAndSendAllChanges()
+    {
+        for (int i = 0; i < inventorySlots.size(); i++)
+        {
+            final ItemStack stack = inventorySlots.get(i).getStack();
+            ItemStack stackOld = inventoryItemStacks.get(i);
+
+            if (!ItemStack.areItemStacksEqual(stackOld, stack))
+            {
+                stackOld = stack.isEmpty() ? ItemStack.EMPTY : stack.copy();
+                inventoryItemStacks.set(i, stackOld);
+
+                for (IContainerListener listener : listeners)
+                {
+                    listener.sendSlotContents(this, i, stackOld);
+                }
+            }
         }
     }
 

@@ -73,7 +73,8 @@ public abstract class CapabilityContainerListener<T> implements IContainerListen
 
     /**
      * This is called to send a single slot contents. It uses a modified packet factory method to accept a capability instance
-     * This only gets called when a slot changes (only non-capability changes count)
+     * The default container implementation will only call this when a non-capability change occurs
+     * Any container that is modifying the capability needs to change this on every tick (i.e. in {@link Container#detectAndSendChanges))
      */
     @Override
     public void sendSlotContents(Container container, int slotIndex, ItemStack stack)
@@ -90,36 +91,14 @@ public abstract class CapabilityContainerListener<T> implements IContainerListen
         }
     }
 
-    /**
-     * This gets called every tick to send any property that has changed.
-     * This is where capability client data needs to be sent. Until further notice, to ensure capability data is updated on client, it must be sent every tick
-     */
     @Override
     public void sendWindowProperty(Container container, int ID, int value)
     {
-        final NonNullList<ItemStack> items = NonNullList.withSize(container.inventorySlots.size(), ItemStack.EMPTY);
-        for (int i = 0; i < container.inventorySlots.size(); i++)
-        {
-            final ItemStack stack = container.inventorySlots.get(i).getStack();
-            if (shouldSyncItem(stack))
-            {
-                items.set(i, stack);
-            }
-        }
-        final PacketTContainerUpdate<T, ?> message = createBulkUpdateMessage(container.windowId, items);
-        if (message.hasData())
-        {
-            AlcatrazCore.getNetwork().sendTo(message, player);
-        }
     }
 
-    /**
-     * This gets called once to send all window properties. It calls the above method to send any and all capability changes
-     */
     @Override
     public void sendAllWindowProperties(Container container, IInventory inventory)
     {
-        sendWindowProperty(container, -1, -1);
     }
 
     protected abstract PacketTContainerUpdate<T, ?> createBulkUpdateMessage(int containerID, NonNullList<ItemStack> items);

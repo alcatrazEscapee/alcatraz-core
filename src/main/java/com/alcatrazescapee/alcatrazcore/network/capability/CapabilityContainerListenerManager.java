@@ -21,6 +21,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import com.alcatrazescapee.alcatrazcore.AlcatrazCore;
 import com.alcatrazescapee.alcatrazcore.network.PacketTContainerUpdate;
 
+import static com.alcatrazescapee.alcatrazcore.AlcatrazCore.MOD_ID;
+
 /**
  * This is a manager for syncing item stack capability data
  * To register a syncable item stack capability requires two calls:
@@ -54,7 +56,7 @@ public class CapabilityContainerListenerManager
         );
     }
 
-    @Mod.EventBusSubscriber(value = Side.SERVER)
+    @Mod.EventBusSubscriber(modid = MOD_ID, value = Side.SERVER)
     private static class EventHandler
     {
         @SubscribeEvent
