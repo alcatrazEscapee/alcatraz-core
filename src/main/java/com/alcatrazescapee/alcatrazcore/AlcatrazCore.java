@@ -10,16 +10,13 @@ import org.apache.logging.log4j.Logger;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ICrashCallable;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
 
+import com.alcatrazescapee.alcatrazcore.proxy.IProxy;
 import com.alcatrazescapee.alcatrazcore.util.OreDictionaryHelper;
 import com.alcatrazescapee.alcatrazcore.util.compat.FireRegistry;
 import com.alcatrazescapee.alcatrazcore.util.compat.WrenchRegistry;
@@ -41,35 +38,30 @@ public final class AlcatrazCore
 
     private static final String FORGE_MIN = "14.23.4.2705";
     private static final String FORGE_MAX = "15.0.0.0";
-
     public static final String DEPENDENCIES = "required-after:forge@[" + FORGE_MIN + "," + FORGE_MAX + ");";
+    private static final String PROXY_PATH = "com.alcatrazescapee." + MOD_ID + ".proxy.";
 
     @Mod.Instance
     private static AlcatrazCore instance;
+    @SidedProxy(modId = MOD_ID, clientSide = PROXY_PATH + "ClientProxy", serverSide = PROXY_PATH + "ServerProxy")
+    private static IProxy proxy;
+
     public static Logger getLog()
     {
         return instance.log;
     }
-
-    public static SimpleNetworkWrapper getNetwork()
-    {
-        return instance.network;
-    }
-
-    public static <R extends IMessage, C extends IMessage> void registerMessage(IMessageHandler<R, C> handler, Class<R> clazz, Side side)
-    {
-        instance.network.registerMessage(handler, clazz, instance.networkMessageID++, side);
-    }
-
-    private Logger log;
 
     public static AlcatrazCore getInstance()
     {
         return instance;
     }
 
-    private SimpleNetworkWrapper network;
-    private int networkMessageID = 0;
+    public static IProxy getProxy()
+    {
+        return proxy;
+    }
+
+    private Logger log;
     private boolean isSignedBuild = true;
 
     @Mod.EventHandler
@@ -78,8 +70,6 @@ public final class AlcatrazCore
         log = event.getModLog();
         if (!isSignedBuild)
             log.warn("You are not running an official build. This version will NOT be supported by the author.");
-
-        network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
     }
 
     @Mod.EventHandler

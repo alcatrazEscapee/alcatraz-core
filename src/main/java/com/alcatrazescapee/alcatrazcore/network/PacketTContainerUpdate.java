@@ -9,7 +9,6 @@ package com.alcatrazescapee.alcatrazcore.network;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -20,6 +19,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import com.alcatrazescapee.alcatrazcore.AlcatrazCore;
 import com.alcatrazescapee.alcatrazcore.network.capability.CapabilityContainerListener;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -148,8 +148,8 @@ public abstract class PacketTContainerUpdate<T, D> implements IMessage
         {
             if (!message.hasData()) return null; // Don't do anything if no data was sent
 
-            Minecraft.getMinecraft().addScheduledTask(() -> {
-                final EntityPlayer player = Minecraft.getMinecraft().player;
+            AlcatrazCore.getProxy().getThreadListener(ctx).addScheduledTask(() -> {
+                final EntityPlayer player = AlcatrazCore.getProxy().getClientPlayer();
                 final Container container;
 
                 if (message.windowID == 0)

@@ -18,16 +18,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.alcatrazescapee.alcatrazcore.AlcatrazCore;
-import com.alcatrazescapee.alcatrazcore.network.PacketTContainerUpdate;
-
 import static com.alcatrazescapee.alcatrazcore.AlcatrazCore.MOD_ID;
 
 /**
  * This is a manager for syncing item stack capability data
- * To register a syncable item stack capability requires two calls:
- * 1. Register a listener factory with {@link CapabilityContainerListenerManager#registerContainerListenerFactory}
- * 2. Register an update packet with {@link CapabilityContainerListenerManager#registerTContainerPacket}
+ * To use, register a listener factory with {@link CapabilityContainerListenerManager#registerContainerListenerFactory}
  * These will require implementations of their respective classes:
  * PacketTContainerUpdate.Handler, PacketTContainerUpdate, and CapabilityContainerListener
  *
@@ -42,11 +37,6 @@ public class CapabilityContainerListenerManager
     public static void registerContainerListenerFactory(Function<EntityPlayerMP, CapabilityContainerListener<?>> factory)
     {
         containerListenerFactories.add(factory);
-    }
-
-    public static <T, D, M extends PacketTContainerUpdate<T, D>> void registerTContainerPacket(Class<M> packet, PacketTContainerUpdate.Handler<T, D, M> packetHandler)
-    {
-        AlcatrazCore.registerMessage(packetHandler, packet, Side.CLIENT);
     }
 
     private static void addListeners(EntityPlayerMP player, Container container)

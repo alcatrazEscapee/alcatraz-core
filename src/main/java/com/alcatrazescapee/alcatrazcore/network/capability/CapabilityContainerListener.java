@@ -18,7 +18,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 
-import com.alcatrazescapee.alcatrazcore.AlcatrazCore;
 import com.alcatrazescapee.alcatrazcore.network.PacketTContainerUpdate;
 
 /**
@@ -67,7 +66,7 @@ public abstract class CapabilityContainerListener<T> implements IContainerListen
         final PacketTContainerUpdate<T, ?> message = createBulkUpdateMessage(container.windowId, syncableItemsList);
         if (message.hasData())
         {
-            AlcatrazCore.getNetwork().sendTo(message, player);
+            sendToPlayer(player, message);
         }
     }
 
@@ -86,8 +85,8 @@ public abstract class CapabilityContainerListener<T> implements IContainerListen
 
         final PacketTContainerUpdate<T, ?> message = createSingleUpdateMessage(container.windowId, slotIndex, cap);
         if (message.hasData())
-        { // Don't send the message if there's nothing to update
-            AlcatrazCore.getNetwork().sendTo(message, player);
+        {
+            sendToPlayer(player, message);
         }
     }
 
@@ -104,6 +103,8 @@ public abstract class CapabilityContainerListener<T> implements IContainerListen
     protected abstract PacketTContainerUpdate<T, ?> createBulkUpdateMessage(int containerID, NonNullList<ItemStack> items);
 
     protected abstract PacketTContainerUpdate<T, ?> createSingleUpdateMessage(int containerID, int slotID, T capability);
+
+    protected abstract void sendToPlayer(EntityPlayerMP player, PacketTContainerUpdate<T, ?> packet);
 
     protected boolean shouldSyncItem(ItemStack stack)
     {
