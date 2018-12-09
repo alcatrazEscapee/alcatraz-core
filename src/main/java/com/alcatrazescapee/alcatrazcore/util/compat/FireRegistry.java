@@ -17,7 +17,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.alcatrazescapee.alcatrazcore.AlcatrazCore;
 import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
 
-public class FireRegistry
+public final class FireRegistry
 {
     private static List<ItemStack> fireStarters;
 

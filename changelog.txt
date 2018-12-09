@@ -1,5 +1,4 @@
-v1.0.2
+v1.0.3
 
 Changes
- - Lots of base mod stuff for a new project
- - Added a system to sync capabilities from server to client for those that require it
+ - Fixed an issue with jar signing not happening in curseforge magic
