@@ -14,16 +14,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.alcatrazescapee.alcatrazcore.AlcatrazCore;
 import com.alcatrazescapee.alcatrazcore.util.CoreHelpers;
 
 public final class FireRegistry
 {
-    private static List<ItemStack> fireStarters;
+    private static final List<ItemStack> FIRE_STARTERS = new ArrayList<>();
 
     public static boolean isFireStarter(ItemStack stack)
     {
-        for (ItemStack fireStarter : fireStarters)
+        for (ItemStack fireStarter : FIRE_STARTERS)
             if (CoreHelpers.doStacksMatch(stack, fireStarter))
                 return true;
         return false;
@@ -31,21 +30,27 @@ public final class FireRegistry
 
     public static void init()
     {
-        fireStarters = new ArrayList<>();
-        fireStarters.add(new ItemStack(Items.FLINT_AND_STEEL, 1, OreDictionary.WILDCARD_VALUE));
+        FIRE_STARTERS.clear();
+        FIRE_STARTERS.add(new ItemStack(Items.FLINT_AND_STEEL, 1, OreDictionary.WILDCARD_VALUE));
 
         if (Loader.isModLoaded("notreepunching"))
         {
-            AlcatrazCore.getLog().info("Adding fire starters from No Tree Punching");
-            fireStarters.add(CoreHelpers.getStackByRegistryName("notreepunching:fire_starter", OreDictionary.WILDCARD_VALUE));
+            FIRE_STARTERS.add(CoreHelpers.getStackByRegistryName("notreepunching:fire_starter", OreDictionary.WILDCARD_VALUE));
         }
-        // todo: more fire starter items!
+        if (Loader.isModLoaded("charcoal_pit"))
+        {
+            FIRE_STARTERS.add(CoreHelpers.getStackByRegistryName("charcoal_pit:fire_starter", OreDictionary.WILDCARD_VALUE));
+        }
+        if (Loader.isModLoaded("primal"))
+        {
+            FIRE_STARTERS.add(CoreHelpers.getStackByRegistryName("primal:fire_bow", OreDictionary.WILDCARD_VALUE));
+        }
 
-        fireStarters.removeIf(ItemStack::isEmpty);
+        FIRE_STARTERS.removeIf(ItemStack::isEmpty);
     }
 
     public static void addFireStarter(ItemStack stack)
     {
-        fireStarters.add(stack);
+        FIRE_STARTERS.add(stack);
     }
 }
