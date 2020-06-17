@@ -2,16 +2,16 @@
 # Loader Metadata
 modLoader="javafml"
 loaderVersion="[31,)"
-#issueTrackerURL="" # optional
+issueTrackerURL="https://github.com/alcatrazEscapee/alcatraz-core/issues" # optional
 
 # Mods
 [[mods]]
-modId="notreepunching"
+modId="alcatrazcore"
 version="${file.jarVersion}"
 displayName="Alcatraz Core"
 
 #updateJSONURL="http://myurl.me/" # optional
-displayURL="http://example.com/" # optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/alcatrazcore" # optional
 #logoFile="examplemod.png" # optional
 #credits="" # optional
 authors="AlcatrazEscapee" # optional
