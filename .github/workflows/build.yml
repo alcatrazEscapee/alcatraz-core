@@ -1,4 +1,4 @@
-name: Curseforge Build + Upload
+name: Build + Publish
 
 on:
   push:
