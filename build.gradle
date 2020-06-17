@@ -1,103 +1,129 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven { // Forge Gradle
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven { // Curse Forge
-            url "https://plugins.gradle.org/m2/"
-        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.1.0'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.matthewprenger.cursegradle'
-
-ext.priv = parseConfig(file('../../jar-signing/private.properties'))
-
-version = "${mod_version}"
-group = "com.alcatrazescapee.alcatrazcore" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "alcatrazcore"
-
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+plugins {
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'idea'
+    id 'maven-publish'
 }
+apply plugin: 'net.minecraftforge.gradle'
+
+/**
+ * Version in dev is set to 'dev'
+ * Any builds produced by the github actions build script will have a version matching their tag.
+ * All version numbers should be Semantic Versioning 2.0 compliant
+ */
+if (System.getenv('VERSION') != null) {
+    version = System.getenv('VERSION')
+} else {
+    version = 'dev'
+}
+group = 'com.alcatrazescapee.core' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "alcatrazcore-forge-${mc_version}"
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "${mc_version}-${forge_version}"
-    runDir = "run"
+    mappings channel: 'snapshot', version: '20200408-1.15.1'
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    mappings = "${mcp_mappings}"
-    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    // Run configurations
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                alcatrazcore {
+                    source sourceSets.main
+                }
+            }
+        }
 
-    replace 'GRADLE:VERSION', "${mod_version}"
-    replaceIn "AlcatrazCore.java"
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                alcatrazcore {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+dependencies {
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+}
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+// Puts the mod version into the jar for mods.toml to read from
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "alcatrazcore",
+                "Specification-Vendor": "AlcatrazEscapee",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"AlcatrazEscapee",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
 }
 
 curseforge {
-    if (priv == null) {
+    def envApiKey = System.getenv('CURSEFORGE_API_KEY')
+    if (envApiKey == null) {
+        println 'Unable to locate CURSEFORGE_API_KEY in env variable'
         return
     }
+    def versionReleaseType = "release"
+    if (version.toString().contains("beta")) {
+        versionReleaseType = "beta"
+    } else if (version.toString().contains("alpha")) {
+        versionReleaseType = "alpha"
+    }
     project {
-        apiKey = "${priv.curseforge_api_token}"
-        id = "304493"
-        changelog = file("changelog.txt")
-        releaseType = "release"
-
-        addGameVersion("${mc_version}")
-        afterEvaluate {
-            gameVersionStrings.remove('Java 9')
-        }
+        apiKey = envApiKey
+        id = '304493'
+        changelog = "[Release Notes ${version}](https://github.com/alcatrazEscapee/ore-veins/releases/tag/v${version})"
+        changelogType = "markdown"
+        releaseType = versionReleaseType
+        addGameVersion "${mc_version}"
     }
 }
 
-task signJar(type: SignJar, dependsOn: reobfJar) {
-    signJar.keyStore = "${priv.keyStore}"
-    signJar.alias = "${priv.keyStoreAlias}"
-    signJar.storePass = "${priv.keyStorePass}"
-    signJar.keyPass = "${priv.keyStoreKeyPass}"
+jar.finalizedBy('reobfJar')
 
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
-}
+publishing {
+    def githubUser = System.getenv("GITHUB_ACTOR")
+    if (githubUser == null) {
+        println 'Unable to locate GITHUB_ACTOR env variable'
+        return
+    }
 
-build.dependsOn signJar
-tasks.curseforge.mustRunAfter signJar
-tasks.curseforge.dependsOn build
-
-def static parseConfig(File config) {
-    if (config.exists()) {
-        config.withReader {
-            def prop = new Properties()
-            prop.load(it)
-            return (new ConfigSlurper().parse(prop))
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
         }
-    } else {
-        return null
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/alcatrazEscapee/alcatraz-core"
+            credentials = {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }

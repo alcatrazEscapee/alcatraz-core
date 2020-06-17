@@ -10,10 +10,13 @@
 *.iws
 *.iml
 
-# Private Stuff
-private.properties
+# Python
+*.py
 
 # Production
 /out/
 /run/
 /libs/
+
+# Wiki
+/no-tree-punching.wiki/

@@ -1,4 +1,0 @@
-v1.0.4
-
-Changes
- - Added compatibility for Fire starters from Charcoal pit + Primal core
