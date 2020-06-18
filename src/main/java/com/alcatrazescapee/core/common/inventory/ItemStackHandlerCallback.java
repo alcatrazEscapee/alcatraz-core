@@ -1,14 +1,15 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.common.inventory;
 
-import com.alcatrazescapee.core.common.container.ItemStackContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
+
+import com.alcatrazescapee.core.common.container.ItemStackContainer;
 
 /**
  * This is an item stack handler which delegates some logic back to the provided callback

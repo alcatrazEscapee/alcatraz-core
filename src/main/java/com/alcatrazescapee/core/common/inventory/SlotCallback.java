@@ -1,6 +1,6 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.common.inventory;

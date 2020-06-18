@@ -1,9 +1,11 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.common.tileentity;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,8 +17,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
-
-import javax.annotation.Nullable;
 
 /**
  * A tile entity that handles saving NBT data and default update packets

@@ -1,13 +1,18 @@
+/*
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
+ */
+
 package com.alcatrazescapee.core.util;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * This is a structure which provides O(1), {@link HashMap} access of the wrapped {@code Map<Predicate<V>, R>}

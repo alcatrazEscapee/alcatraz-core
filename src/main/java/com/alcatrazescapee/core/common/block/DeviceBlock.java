@@ -1,16 +1,17 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.common.block;
 
-import com.alcatrazescapee.core.common.tileentity.InventoryTileEntity;
-import com.alcatrazescapee.core.util.CoreHelpers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.alcatrazescapee.core.common.tileentity.InventoryTileEntity;
+import com.alcatrazescapee.core.util.CoreHelpers;
 
 /**
  * A block with a tile entity

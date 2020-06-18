@@ -1,19 +1,21 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.common.container;
 
-import com.alcatrazescapee.core.common.tileentity.InventoryTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
+import com.alcatrazescapee.core.common.tileentity.InventoryTileEntity;
+
 /**
  * Generic container for use with {@link InventoryTileEntity}
+ *
  * @since 2.0.0
  */
 public abstract class DeviceContainer<T extends InventoryTileEntity> extends ModContainer

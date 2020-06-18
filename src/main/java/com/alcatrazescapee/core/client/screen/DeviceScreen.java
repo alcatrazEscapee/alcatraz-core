@@ -1,15 +1,16 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.client.screen;
 
-import com.alcatrazescapee.core.common.container.DeviceContainer;
-import com.alcatrazescapee.core.common.tileentity.InventoryTileEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+
+import com.alcatrazescapee.core.common.container.DeviceContainer;
+import com.alcatrazescapee.core.common.tileentity.InventoryTileEntity;
 
 /**
  * Screen for a {@link InventoryTileEntity} and {@link DeviceContainer}

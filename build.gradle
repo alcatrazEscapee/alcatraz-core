@@ -68,12 +68,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "alcatrazcore",
-                "Specification-Vendor": "AlcatrazEscapee",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"AlcatrazEscapee",
+                "Specification-Title"     : "alcatrazcore",
+                "Specification-Vendor"    : "AlcatrazEscapee",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "AlcatrazEscapee",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
@@ -111,13 +111,13 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 artifacts {
     archives sourcesJar
-    archives javadocJar
 }
 
 jar.finalizedBy('reobfJar')
 
 publishing {
     if (version == "dev") {
+        println 'Version is set to dev, skipping publishing'
         return
     }
     publications {
@@ -127,7 +127,6 @@ publishing {
 
             artifact jar
             artifact sourcesJar
-            artifact javadocJar
         }
     }
     repositories {

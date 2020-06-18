@@ -1,10 +1,18 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.util;
 
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -33,14 +41,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullFunction;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * A collection of helper methods and utilities
@@ -60,6 +60,7 @@ public final class CoreHelpers
 
     /**
      * Gets a tile entity and casts it to the required type
+     *
      * @since 2.0.0
      */
     @SuppressWarnings("unchecked")
@@ -255,7 +256,8 @@ public final class CoreHelpers
      */
     public static INamedContainerProvider getStackContainerProvider(ItemStack stack, IContainerProvider simpleContainerProvider)
     {
-        return new INamedContainerProvider() {
+        return new INamedContainerProvider()
+        {
             @Override
             public ITextComponent getDisplayName()
             {

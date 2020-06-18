@@ -1,3 +1,8 @@
+/*
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
+ */
+
 package com.alcatrazescapee.core.util;
 
 import java.util.function.Supplier;

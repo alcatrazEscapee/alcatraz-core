@@ -1,17 +1,18 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.common.inventory;
 
+import java.util.Arrays;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import java.util.Arrays;
-
 /**
  * A wrapper for item handlers, which can be used to expose certain sides to automation
+ *
  * @since 2.0.0
  */
 public class SidedItemStackHandler implements IItemHandlerModifiable

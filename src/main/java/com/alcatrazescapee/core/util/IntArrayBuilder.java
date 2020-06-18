@@ -1,17 +1,17 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.util;
-
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IntReferenceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
+
+import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntReferenceHolder;
 
 /**
  * Builder styled {@link IIntArray} since rewriting the same switch based anonymous class is a pain

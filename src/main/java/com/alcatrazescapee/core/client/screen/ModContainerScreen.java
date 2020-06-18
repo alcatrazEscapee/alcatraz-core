@@ -1,14 +1,21 @@
+/*
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
+ */
+
 package com.alcatrazescapee.core.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
 /**
  * Simple screen for a container
+ *
  * @since 2.0.0
  */
 public class ModContainerScreen<C extends Container> extends ContainerScreen<C>

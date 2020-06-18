@@ -1,13 +1,12 @@
 /*
- * Part of the Primal Alchemy mod by AlcatrazEscapee.
- * Copyright (c) 2019. See the project LICENSE.md for details.
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
  */
 
 package com.alcatrazescapee.core.common.tileentity;
 
-import com.alcatrazescapee.core.common.inventory.ISlotCallback;
-import com.alcatrazescapee.core.common.inventory.ItemStackHandlerCallback;
-import com.alcatrazescapee.core.util.CoreHelpers;
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -18,7 +17,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nullable;
+import com.alcatrazescapee.core.common.inventory.ISlotCallback;
+import com.alcatrazescapee.core.common.inventory.ItemStackHandlerCallback;
+import com.alcatrazescapee.core.util.CoreHelpers;
 
 /**
  * A tile entity that has a single basic inventory

@@ -1,4 +1,11 @@
+/*
+ * Part of the Alcatraz Core mod by AlcatrazEscapee.
+ * Copyright (c) 2020. See the project LICENSE.md for details.
+ */
+
 package com.alcatrazescapee.core.common.container;
+
+import javax.annotation.Nonnull;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -6,8 +13,6 @@ import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nonnull;
 
 /**
  * Container for inventories from item stacks
