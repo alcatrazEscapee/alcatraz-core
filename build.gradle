@@ -80,12 +80,15 @@ jar {
 }
 
 curseforge {
-    def envApiKey = System.getenv('CURSEFORGE_API_KEY')
+    if (version == "dev") {
+        return
+    }
+    String envApiKey = System.getenv('CURSEFORGE_API_KEY')
     if (envApiKey == null) {
         println 'Unable to locate CURSEFORGE_API_KEY in env variable'
         return
     }
-    def versionReleaseType = "release"
+    String versionReleaseType = "release"
     if (version.toString().contains("beta")) {
         versionReleaseType = "beta"
     } else if (version.toString().contains("alpha")) {
@@ -94,36 +97,40 @@ curseforge {
     project {
         apiKey = envApiKey
         id = '304493'
-        changelog = "[Release Notes ${version}](https://github.com/alcatrazEscapee/ore-veins/releases/tag/v${version})"
+        changelog = "[Release Notes ${version}](https://github.com/alcatrazEscapee/alcatraz-core/releases/tag/v${version})"
         changelogType = "markdown"
         releaseType = versionReleaseType
         addGameVersion "${mc_version}"
     }
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 jar.finalizedBy('reobfJar')
 
 publishing {
-    def githubUser = System.getenv("GITHUB_ACTOR")
-    if (githubUser == null) {
-        println 'Unable to locate GITHUB_ACTOR env variable'
+    if (version == "dev") {
         return
     }
-
     publications {
         mavenJava(MavenPublication) {
+            groupId = group
+            artifactId = "alcatraz-core-${mc_version}"
+
             artifact jar
+            artifact sourcesJar
+            artifact javadocJar
         }
     }
-
     repositories {
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/alcatrazEscapee/alcatraz-core"
-            credentials {
-                username System.getenv("GITHUB_ACTOR")
-                password System.getenv("GITHUB_TOKEN")
-            }
-        }
+        mavenLocal()
     }
 }

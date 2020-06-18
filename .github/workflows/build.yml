@@ -50,8 +50,8 @@ jobs:
           asset_path: ./build/libs/alcatrazcore-forge-1.15.2-${{ steps.get_version.outputs.result }}.jar
           asset_name: alcatrazcore-forge-1.15.2-${{ steps.get_version.outputs.result }}.jar
           asset_content_type: application/java-archive
-      - name: Github Packages Maven Publish
-        run: ./gradlew publish
+      - name: Curseforge
+        run: ./gradlew curseforge
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
+          VERSION: ${{ steps.get_version.outputs.result }}
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
